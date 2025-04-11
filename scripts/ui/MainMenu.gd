@@ -46,7 +46,8 @@ func check_save_exists() -> void:
 		save_exists = true
 	
 	# Проверяем веб-сохранение
-	if OS.has_feature("web"):
+	if OS.has_feature("web") and Engine.has_singleton("JavaScript"):
+		var JavaScript = Engine.get_singleton("JavaScript")
 		var has_save = JavaScript.eval("""
 		try {
 			return localStorage.getItem('samogon_save') ? true : false;

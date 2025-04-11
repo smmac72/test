@@ -65,11 +65,9 @@ func can_accept_item(item: Node2D) -> bool:
 	if state == CellState.LOCKED or state == CellState.FILLED:
 		return false
 		
-	# Дополнительные проверки на совместимость (если необходимо)
-	if item is CardBase:
-		# Проверка, подходит ли карта в эту ячейку
-		return true
-		
+	# Дополнительные проверки на совместимость
+	#if item is IngredientCard or item is ToolCard or item is ProductInstance:
+		#return true
 	return true
 
 func set_content(new_content: Node2D) -> bool:

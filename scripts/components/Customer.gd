@@ -92,5 +92,5 @@ func update_visual_state() -> void:
 		bubble.modulate = Color(1, 0.6, 0.6)
 
 # Получение прямоугольника для обнаружения столкновений
-func get_global_rect() -> Rect2:
+func get_customer_rect() -> Rect2:
 	return Rect2(global_position, size)

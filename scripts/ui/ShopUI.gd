@@ -186,7 +186,7 @@ func _is_position_over_customer(global_position: Vector2) -> bool:
 	if not active_customer:
 		return false
 	
-	var customer_rect = active_customer.get_global_rect()
+	var customer_rect = active_customer.get_customer_rect()
 	return customer_rect.has_point(global_position)
 
 # Продажа товара клиенту

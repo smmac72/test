@@ -21,7 +21,8 @@ var start_position: Vector2 = Vector2.ZERO
 
 func _ready() -> void:
 	# Настраиваем обработчики событий
-	input_pickable = true
+	set_process_input(true)
+	set_process_unhandled_input(true)
 	connect("input_event", _on_input_event)
 
 # Настройка продукта

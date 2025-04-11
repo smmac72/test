@@ -94,7 +94,8 @@ func load_save_game() -> void:
 	# Проверяем наличие файла сохранения
 	if not FileAccess.file_exists(save_path):
 		# Проверяем веб-сохранение
-		if OS.has_feature("web"):
+		if OS.has_feature("web") and Engine.has_singleton("JavaScript"):
+			var JavaScript = Engine.get_singleton("JavaScript")
 			var json_str = JavaScript.eval("""
 			try {
 				return localStorage.getItem('samogon_save') || '';
@@ -208,7 +209,8 @@ func save_game() -> void:
 	file.close()
 	
 	# Для веб-версии также сохраняем в localStorage
-	if OS.has_feature("web"):
+	if OS.has_feature("web") and Engine.has_singleton("JavaScript"):
+		var JavaScript = Engine.get_singleton("JavaScript")
 		JavaScript.eval("""
 		try {
 			localStorage.setItem('samogon_save', JSON.stringify(%s));
@@ -362,7 +364,8 @@ func load_settings() -> void:
 	# Проверяем наличие файла настроек
 	if not FileAccess.file_exists(settings_path):
 		# Для веб-версии проверяем localStorage
-		if OS.has_feature("web"):
+		if OS.has_feature("web") and Engine.has_singleton("JavaScript"):
+			var JavaScript = Engine.get_singleton("JavaScript")
 			var json_str = JavaScript.eval("""
 			try {
 				return localStorage.getItem('samogon_settings') || '';
@@ -407,7 +410,8 @@ func save_settings() -> void:
 	file.close()
 	
 	# Для веб-версии также сохраняем в localStorage
-	if OS.has_feature("web"):
+	if OS.has_feature("web") and Engine.has_singleton("JavaScript"):
+		var JavaScript = Engine.get_singleton("JavaScript")
 		JavaScript.eval("""
 		try {
 			localStorage.setItem('samogon_settings', JSON.stringify(%s));
