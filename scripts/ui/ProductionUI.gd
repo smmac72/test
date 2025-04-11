@@ -4,11 +4,11 @@ extends Control
 # Секция производства (правое окно из дизайн-документа)
 
 # Узлы компонентов UI
-@onready var grid_container: GridContainer = $ProductionArea/Grid
-@onready var ingredients_bar: HBoxContainer = $IngredientsBar
-@onready var tools_bar: HBoxContainer = $ToolsBar
-@onready var recipe_book_button: Button = $RecipeBookButton
-@onready var upgrade_button: Button = $UpgradeButton
+@onready var grid_container: GridContainer = $VBoxContainer/ProductionArea/Grid
+@onready var ingredients_bar: HBoxContainer = $VBoxContainer/IngredientsPanel/IngredientsBar
+@onready var tools_bar: HBoxContainer = $VBoxContainer/ToolsPanel/ToolsBar
+@onready var recipe_book_button: Button = $VBoxContainer/ButtonPanel/HBoxContainer/RecipeBookButton
+@onready var upgrade_button: Button = $VBoxContainer/ButtonPanel/HBoxContainer/UpgradeButton
 @onready var popup_container: Control = $PopupContainer
 @onready var card_popup: Panel = $PopupContainer/CardPopup
 @onready var recipe_book: Panel = $PopupContainer/RecipeBook
@@ -19,6 +19,7 @@ var current_production_type: String = "samogon"
 # Ссылки на другие системы
 @onready var production_manager: ProductionManager = $"/root/ProductionManager"
 @onready var game_manager: GameManager = $"/root/GameManager"
+@onready var audio_manager: AudioManager = $"/root/AudioManager"
 
 # Инициализация интерфейса
 func _ready() -> void:
@@ -117,7 +118,8 @@ func update_grid() -> void:
 
 # Обновление книги рецептов
 func update_recipe_book() -> void:
-	recipe_book.update_recipes(current_production_type, production_manager.learned_recipes)
+	if recipe_book:
+		recipe_book.update_recipes(current_production_type, production_manager.learned_recipes)
 
 # Обработчик нажатия на кнопку книги рецептов
 func _on_recipe_book_button_pressed() -> void:
@@ -128,6 +130,10 @@ func _on_recipe_book_button_pressed() -> void:
 		hide_popups()
 		recipe_book.show()
 		recipe_book.update_recipes(current_production_type, production_manager.learned_recipes)
+		
+		# Воспроизводим звук
+		if audio_manager:
+			audio_manager.play_sound("popup_open", AudioManager.SoundType.UI)
 
 # Обработчик нажатия на кнопку улучшения
 func _on_upgrade_button_pressed() -> void:
@@ -136,7 +142,11 @@ func _on_upgrade_button_pressed() -> void:
 	var upgrade_menu = preload("res://scenes/ui/UpgradeMenu.tscn").instantiate()
 	upgrade_menu.connect("upgrade_selected", _on_upgrade_selected)
 	popup_container.add_child(upgrade_menu)
-	upgrade_menu.show()
+	upgrade_menu.popup_centered()
+	
+	# Воспроизводим звук
+	if audio_manager:
+		audio_manager.play_sound("popup_open", AudioManager.SoundType.UI)
 
 # Обработчик нажатия на карточку
 func _on_card_clicked(card_data) -> void:
@@ -154,14 +164,20 @@ func show_card_popup(card_data) -> void:
 	card_popup.connect("discard_pressed", _on_popup_discard_pressed)
 	card_popup.connect("close_pressed", _on_popup_close_pressed)
 	card_popup.show()
+	
+	# Воспроизводим звук
+	if audio_manager:
+		audio_manager.play_sound("popup_open", AudioManager.SoundType.UI)
 
 # Скрытие всех всплывающих окон
 func hide_popups() -> void:
 	# Скрываем popup карточки
-	card_popup.hide()
+	if card_popup:
+		card_popup.hide()
 	
 	# Скрываем книгу рецептов
-	recipe_book.hide()
+	if recipe_book:
+		recipe_book.hide()
 	
 	# Удаляем все другие временные попапы
 	for child in popup_container.get_children():
@@ -173,14 +189,26 @@ func _on_popup_buy_pressed(card_data, amount: int) -> void:
 	if card_data is IngredientData:
 		production_manager.buy_ingredient(card_data.id, amount)
 		card_popup.update_content()  # Обновляем информацию в попапе
+		
+		# Воспроизводим звук покупки
+		if audio_manager:
+			audio_manager.play_sound("money_loss", AudioManager.SoundType.UI)
 
 func _on_popup_improve_pressed(card_data) -> void:
 	if card_data is IngredientData:
-		production_manager.improve_ingredient(card_data.id)
-		card_popup.update_content()  # Обновляем информацию в попапе
+		if production_manager.improve_ingredient(card_data.id):
+			card_popup.update_content()  # Обновляем информацию в попапе
+			
+			# Воспроизводим звук улучшения
+			if audio_manager:
+				audio_manager.play_sound("money_loss", AudioManager.SoundType.UI)
 	elif card_data is ToolData:
-		production_manager.improve_tool(card_data.id)
-		card_popup.update_content()  # Обновляем информацию в попапе
+		if production_manager.improve_tool(card_data.id):
+			card_popup.update_content()  # Обновляем информацию в попапе
+			
+			# Воспроизводим звук улучшения
+			if audio_manager:
+				audio_manager.play_sound("money_loss", AudioManager.SoundType.UI)
 
 func _on_popup_discard_pressed(card_data) -> void:
 	# Логика удаления продукта
@@ -193,24 +221,37 @@ func _on_popup_discard_pressed(card_data) -> void:
 		# Обновляем UI
 		production_manager.emit_signal("product_count_changed", card_data.id, card_data.count, false)
 		card_popup.update_content()  # Обновляем информацию в попапе
+		
+		# Воспроизводим звук удаления
+		if audio_manager:
+			audio_manager.play_sound("item_drop", AudioManager.SoundType.GAMEPLAY)
 
 func _on_popup_close_pressed() -> void:
 	hide_popups()
+	
+	# Воспроизводим звук закрытия
+	if audio_manager:
+		audio_manager.play_sound("popup_close", AudioManager.SoundType.UI)
 
 # Обработчики событий перетаскивания карточек
 func _on_card_drag_started(card_node) -> void:
-	# Логика начала перетаскивания
-	# Можно добавить визуальные эффекты
-	pass
+	# Воспроизводим звук начала перетаскивания
+	if audio_manager:
+		audio_manager.play_sound("item_pickup", AudioManager.SoundType.GAMEPLAY)
 
 func _on_card_drag_ended(card_node, drop_position: Vector2) -> void:
-	# Если карточка не была брошена в допустимое место, возвращаем её
+	# Проверяем, находится ли позиция над допустимой целью
+	# Если нет, возвращаем карточку на место
 	card_node.return_to_original()
+	
+	# Воспроизводим звук окончания перетаскивания
+	if audio_manager:
+		audio_manager.play_sound("item_drop", AudioManager.SoundType.GAMEPLAY)
 
 # Обработчики событий взаимодействия с ячейками сетки
 func _on_cell_highlighted(cell) -> void:
 	# Визуальное выделение ячейки
-	cell.highlight_as_target()
+	cell.highlight_as_target(true)
 
 func _on_cell_unhighlighted(cell) -> void:
 	# Снятие выделения ячейки
@@ -227,6 +268,18 @@ func _on_item_dropped_to_cell(cell, item_data) -> void:
 		
 		# Обновляем состояние ячейки
 		cell.set_content(tool_instance)
+		
+		# Воспроизводим звук размещения
+		if audio_manager:
+			audio_manager.play_sound("item_place", AudioManager.SoundType.GAMEPLAY)
+	elif item_data is IngredientData:
+		# Проверяем, есть ли в ячейке инструмент
+		var cell_content = cell.content
+		if cell_content is ToolInstance:
+			# Пытаемся добавить ингредиент в инструмент
+			# Эта логика должна быть реализована в ToolInstance
+			pass
+		
 	elif item_data is ProductData:
 		# Размещаем продукт в ячейке (если это промежуточный продукт)
 		if not item_data.is_final:
@@ -241,6 +294,10 @@ func _on_item_dropped_to_cell(cell, item_data) -> void:
 			# Уменьшаем количество продукта в инвентаре
 			item_data.count -= 1
 			production_manager.emit_signal("product_count_changed", item_data.id, item_data.count, false)
+			
+			# Воспроизводим звук размещения
+			if audio_manager:
+				audio_manager.play_sound("item_place", AudioManager.SoundType.GAMEPLAY)
 
 # Обработчик события создания продукта
 func _on_recipe_completed(product_id: String, quality: int) -> void:
@@ -252,6 +309,10 @@ func _on_recipe_completed(product_id: String, quality: int) -> void:
 	# Обновляем книгу рецептов, если она открыта
 	if recipe_book.visible:
 		recipe_book.update_recipes(current_production_type, production_manager.learned_recipes)
+	
+	# Воспроизводим звук завершения создания
+	if audio_manager:
+		audio_manager.play_sound("production_complete", AudioManager.SoundType.GAMEPLAY)
 
 # Обработчик изменения количества продукта
 func _on_product_count_changed(product_id: String, new_count: int, is_ingredient: bool) -> void:
@@ -308,9 +369,10 @@ func _on_upgrade_selected(upgrade_id: String) -> void:
 	var production_type = ""
 	
 	# Находим данные улучшения
-	for type in production_manager.config_manager.upgrades:
-		for level in production_manager.config_manager.upgrades[type]:
-			var upgrade = production_manager.config_manager.upgrades[type][level]
+	var config_manager = $"/root/ConfigManager"
+	for type in config_manager.upgrades:
+		for level in config_manager.upgrades[type]:
+			var upgrade = config_manager.upgrades[type][level]
 			if upgrade.id == upgrade_id:
 				upgrade_data = upgrade
 				production_type = type
@@ -337,6 +399,10 @@ func _on_upgrade_selected(upgrade_id: String) -> void:
 			
 			# Показываем уведомление
 			show_notification("Приобретено улучшение: " + upgrade_data.name)
+			
+			# Воспроизводим звук покупки
+			if audio_manager:
+				audio_manager.play_sound("money_loss", AudioManager.SoundType.UI)
 		else:
 			# Недостаточно денег
 			show_notification("Недостаточно денег для покупки улучшения!")
@@ -347,6 +413,12 @@ func show_notification(text: String) -> void:
 	notification.setup(text)
 	add_child(notification)
 	
-	# Автоматическое исчезновение через 3 секунды
-	var timer = get_tree().create_timer(3.0)
-	timer.connect("timeout", notification.queue_free)
+	# Воспроизводим звук уведомления
+	if audio_manager:
+		audio_manager.play_sound("popup_open", AudioManager.SoundType.UI)
+
+# Установка текущего типа производства
+func set_production_type(type: String) -> void:
+	if current_production_type != type:
+		current_production_type = type
+		update_production_ui()

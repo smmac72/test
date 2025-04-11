@@ -124,7 +124,7 @@ func _on_reputation_changed(new_reputation: float, change: float, reason: String
 	
 	# Показываем уведомление об изменении, если есть причина
 	if not reason.is_empty() and abs(change) > 0.1:
-		var change_text = str(stepify(change, 0.1))
+		var change_text = str(snapped(change, 0.1))
 		if change > 0:
 			change_text = "+" + change_text
 		show_notification(reason + ": " + change_text + " к репутации")

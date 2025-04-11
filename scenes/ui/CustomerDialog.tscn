@@ -1,0 +1,89 @@
+[gd_scene load_steps=3 format=3 uid="uid://bn7gxbp26437t"]
+
+[ext_resource type="Script" uid="uid://cf1nawhgj4t6c" path="res://scripts/ui/CustomerDialog.gd" id="1_wy7ox"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xkmbu"]
+bg_color = Color(0.2, 0.2, 0.2, 0.95)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+shadow_color = Color(0, 0, 0, 0.3)
+shadow_size = 5
+
+[node name="CustomerDialog" type="Panel"]
+custom_minimum_size = Vector2(500, 300)
+offset_right = 500.0
+offset_bottom = 300.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_xkmbu")
+script = ExtResource("1_wy7ox")
+
+[node name="NameLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -150.0
+offset_top = 15.0
+offset_right = 150.0
+offset_bottom = 45.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 18
+text = "Имя клиента"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RequestLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -220.0
+offset_top = 60.0
+offset_right = 220.0
+offset_bottom = 140.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 14
+text = "Запрос клиента. Здесь будет подробное описание того, что хочет клиент."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="ResponseOptions" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -200.0
+offset_top = -130.0
+offset_right = 200.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 0
+alignment = 1
+
+[node name="Option1" type="Button" parent="ResponseOptions"]
+layout_mode = 2
+text = "Сейчас подберу для вас что-нибудь подходящее."
+
+[node name="Option2" type="Button" parent="ResponseOptions"]
+layout_mode = 2
+text = "У нас как раз есть то, что вам нужно!"
+
+[node name="Option3" type="Button" parent="ResponseOptions"]
+layout_mode = 2
+text = "Давайте я покажу вам наш ассортимент."
+
+[node name="CloseButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = 40.0
+grow_horizontal = 0
+text = "X"

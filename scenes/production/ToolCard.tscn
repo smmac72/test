@@ -1,0 +1,108 @@
+[gd_scene load_steps=3 format=3 uid="uid://43ak5mky0y7n"]
+
+[ext_resource type="Script" uid="uid://oxcos03qe1he" path="res://scripts/components/ToolCard.gd" id="1_sn04d"]
+[ext_resource type="Texture2D" uid="uid://5rfup2t00dg6" path="res://assets/images/tools/default.png" id="2_1kpq3"]
+
+[node name="ToolCard" type="Control"]
+custom_minimum_size = Vector2(96, 120)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 96.0
+offset_bottom = 120.0
+mouse_default_cursor_shape = 6
+script = ExtResource("1_sn04d")
+
+[node name="CardContainer" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="Background" type="ColorRect" parent="CardContainer"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.2, 0.15, 0.1, 0.8)
+
+[node name="Sprite" type="TextureRect" parent="CardContainer"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -40.0
+offset_top = 5.0
+offset_right = 40.0
+offset_bottom = 85.0
+grow_horizontal = 2
+mouse_filter = 2
+texture = ExtResource("2_1kpq3")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="NameLabel" type="Label" parent="CardContainer"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -40.0
+offset_top = 30.0
+offset_right = 40.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 11
+text = "Инструмент"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="QualityStars" type="Control" parent="CardContainer"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -25.0
+offset_top = -25.0
+offset_right = 25.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="Star1" type="TextureRect" parent="CardContainer/QualityStars"]
+layout_mode = 0
+offset_left = 5.0
+offset_right = 15.0
+offset_bottom = 15.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Star2" type="TextureRect" parent="CardContainer/QualityStars"]
+layout_mode = 0
+offset_left = 20.0
+offset_right = 30.0
+offset_bottom = 15.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Star3" type="TextureRect" parent="CardContainer/QualityStars"]
+layout_mode = 0
+offset_left = 35.0
+offset_right = 45.0
+offset_bottom = 15.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5

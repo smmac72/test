@@ -2,15 +2,16 @@ class_name ShopUI
 extends Control
 
 # Сигналы
-signal product_sold(product_id: String, quality: int, price: int, customer_id: String)
-signal customer_left(customer_id: String, satisfied: bool)
-signal money_taken_from_cash(amount: int)
+signal product_sold(product_id, quality, price, customer_id)
+signal customer_left(customer_id, satisfied)
+signal money_taken_from_cash(amount)
 
 # Узлы UI
 @onready var counter_panel: Panel = $VBoxContainer/ShopArea/VBoxContainer/CounterPanel
 @onready var customer_area: Control = $VBoxContainer/ShopArea/VBoxContainer/CustomerArea
 @onready var storage_panel: Panel = $VBoxContainer/ShopArea/VBoxContainer/StoragePanel
 @onready var storage_grid: GridContainer = $VBoxContainer/ShopArea/VBoxContainer/StoragePanel/StorageGrid
+@onready var storage_title: Label = $VBoxContainer/ShopArea/VBoxContainer/StoragePanel/StorageTitle
 
 # Активный клиент
 var active_customer = null
@@ -21,11 +22,13 @@ var storage_slots: Array = []
 @onready var production_manager: ProductionManager = $"/root/ProductionManager"
 @onready var game_manager: GameManager = $"/root/GameManager"
 @onready var customer_manager: CustomerManager = $"/root/CustomerManager"
+@onready var audio_manager: AudioManager = $"/root/AudioManager"
 
 # Инициализация
 func _ready() -> void:
 	# Подключаем сигналы
 	production_manager.connect("recipe_completed", _on_recipe_completed)
+	counter_panel.connect("gui_input", _on_counter_panel_gui_input)
 	
 	# Инициализируем сетку склада
 	initialize_storage_grid()
@@ -49,6 +52,7 @@ func initialize_storage_grid() -> void:
 	
 	# Создаем новые слоты для склада
 	var slot_count = 9  # 3x3 сетка
+	storage_grid.columns = 3
 	storage_slots.clear()
 	
 	for i in range(slot_count):
@@ -117,6 +121,13 @@ func _on_storage_slot_clicked(slot) -> void:
 		# Показываем информацию о продукте
 		show_product_info(slot)
 
+# Обработчик нажатия на прилавок
+func _on_counter_panel_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			# Показываем кассу при нажатии на прилавок
+			_on_cash_register_clicked()
+
 # Показ информации о продукте
 func show_product_info(slot) -> void:
 	var product_key = slot.product_id + "_" + str(slot.quality)
@@ -130,6 +141,10 @@ func show_product_info(slot) -> void:
 		popup.connect("discard_pressed", _on_product_discard_pressed.bind(slot))
 		add_child(popup)
 		popup.popup_centered()
+		
+		# Воспроизводим звук открытия попапа
+		if audio_manager:
+			audio_manager.play_sound("popup_open", AudioManager.SoundType.UI)
 
 # Обработчик изменения цены продукта
 func _on_product_price_changed(new_modifier: float, product_key: String) -> void:
@@ -151,6 +166,10 @@ func _on_product_discard_pressed(slot) -> void:
 			var product_key = slot.product_id + "_" + str(slot.quality)
 			if product_key in available_products:
 				available_products.erase(product_key)
+		
+		# Воспроизводим звук удаления
+		if audio_manager:
+			audio_manager.play_sound("item_drop", AudioManager.SoundType.GAMEPLAY)
 
 # Обработчик перетаскивания товара из склада
 func _on_storage_item_dragged(slot, global_position: Vector2) -> void:
@@ -209,9 +228,17 @@ func sell_product_to_customer(product_id: String, quality: int, slot) -> void:
 		
 		# Показываем уведомление
 		show_notification("Продажа успешна! +" + str(final_price) + "₽")
+		
+		# Воспроизводим звук успешной продажи
+		if audio_manager:
+			audio_manager.play_sound("sale_success", AudioManager.SoundType.GAMEPLAY)
 	else:
 		# Клиент отказался
 		show_notification("Клиент отказался от покупки.")
+		
+		# Воспроизводим звук отказа
+		if audio_manager:
+			audio_manager.play_sound("sale_fail", AudioManager.SoundType.GAMEPLAY)
 
 # Обработчик прихода клиента
 func _on_customer_arrived(customer_data: Dictionary) -> void:
@@ -232,14 +259,29 @@ func _on_customer_arrived(customer_data: Dictionary) -> void:
 	
 	# Показываем уведомление
 	show_notification("Прибыл новый клиент!")
+	
+	# Воспроизводим звук прихода клиента
+	if audio_manager:
+		audio_manager.play_sound("customer_enter", AudioManager.SoundType.GAMEPLAY)
 
 # Обработчик нажатия на клиента
 func _on_customer_clicked(customer) -> void:
 	# Показываем диалог с клиентом
 	var dialog = preload("res://scenes/ui/CustomerDialog.tscn").instantiate()
 	dialog.setup(customer.customer_data)
+	dialog.connect("dialog_completed", _on_customer_dialog_completed)
 	add_child(dialog)
 	dialog.popup_centered()
+	
+	# Воспроизводим звук открытия диалога
+	if audio_manager:
+		audio_manager.play_sound("popup_open", AudioManager.SoundType.UI)
+
+# Обработчик завершения диалога с клиентом
+func _on_customer_dialog_completed(result: Dictionary) -> void:
+	# Обрабатываем результаты диалога с клиентом
+	# Например, можно увеличить шанс на покупку
+	pass
 
 # Обработчик запроса клиента на уход
 func _on_customer_leave_requested(customer, satisfied: bool) -> void:
@@ -252,6 +294,10 @@ func _customer_leave(satisfied: bool) -> void:
 	
 	# Отправляем сигнал об уходе клиента
 	emit_signal("customer_left", active_customer.customer_id, satisfied)
+	
+	# Воспроизводим звук ухода клиента
+	if audio_manager:
+		audio_manager.play_sound("customer_exit", AudioManager.SoundType.GAMEPLAY)
 	
 	# Удаляем клиента
 	active_customer.queue_free()
@@ -268,13 +314,28 @@ func _on_cash_register_clicked() -> void:
 	# Показываем меню кассы
 	var cash_menu = preload("res://scenes/ui/CashRegisterMenu.tscn").instantiate()
 	cash_menu.connect("money_taken", _on_money_taken_from_cash)
+	cash_menu.connect("closed", _on_cash_menu_closed)
 	add_child(cash_menu)
 	cash_menu.popup_centered()
+	
+	# Воспроизводим звук открытия кассы
+	if audio_manager:
+		audio_manager.play_sound("popup_open", AudioManager.SoundType.UI)
+
+# Обработчик закрытия меню кассы
+func _on_cash_menu_closed() -> void:
+	# Воспроизводим звук закрытия
+	if audio_manager:
+		audio_manager.play_sound("popup_close", AudioManager.SoundType.UI)
 
 # Обработчик взятия денег из кассы
 func _on_money_taken_from_cash(amount: int) -> void:
 	# Отправляем сигнал о взятии денег
 	emit_signal("money_taken_from_cash", amount)
+	
+	# Воспроизводим звук взятия денег
+	if audio_manager:
+		audio_manager.play_sound("money_gain", AudioManager.SoundType.UI)
 
 # Показ временного уведомления
 func show_notification(text: String) -> void:
