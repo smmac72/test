@@ -1,0 +1,313 @@
+{
+  "samogon": [
+	{
+	  "id": "fermentation",
+	  "name": "Бродильный чан",
+	  "description": "Базовый инструмент для создания браги.",
+	  "production_type": "samogon",
+	  "slots": [
+		{"id": "slot1", "type": "base", "required": true, "display_name": "Вода"},
+		{"id": "slot2", "type": "mash_ingredient", "required": true, "display_name": "Ингредиент для браги"},
+		{"id": "slot3", "type": "fermentation", "required": true, "display_name": "Дрожжи/Фермент"}
+	  ],
+	  "processing_time": 10,
+	  "quality_weights": {"base": 30, "mash_ingredient": 20, "fermentation": 20, "tool": 30},
+	  "improvement_costs": [100, 200, 300, 400],
+	  "sprite": "fermentation_barrel"
+	},
+	{
+	  "id": "distiller",
+	  "name": "Дистиллятор",
+	  "description": "Перегонный аппарат для очистки браги.",
+	  "production_type": "samogon",
+	  "slots": [
+		{"id": "slot1", "type": "mash", "required": true, "display_name": "Брага"}
+	  ],
+	  "processing_time": 20,
+	  "quality_weights": {"mash": 60, "tool": 40},
+	  "improvement_costs": [200, 300, 400, 500],
+	  "sprite": "distiller"
+	},
+	{
+	  "id": "moonshine_machine",
+	  "name": "Самогонный аппарат",
+	  "description": "Специальный аппарат для производства самогона из сахарной браги.",
+	  "production_type": "samogon",
+	  "slots": [
+		{"id": "slot1", "type": "mash", "required": true, "display_name": "Сахарная брага"}
+	  ],
+	  "processing_time": 30,
+	  "quality_weights": {"mash": 60, "tool": 40},
+	  "improvement_costs": [250, 350, 450, 550],
+	  "sprite": "moonshine_machine"
+	},
+	{
+	  "id": "tincture_maker",
+	  "name": "Настойник",
+	  "description": "Специальный аппарат для создания настоек.",
+	  "production_type": "samogon",
+	  "slots": [
+		{"id": "slot1", "type": "base_alcohol", "required": true, "display_name": "Спирт"},
+		{"id": "slot2", "type": "flavor", "required": true, "display_name": "Ароматизатор"}
+	  ],
+	  "processing_time": 60,
+	  "quality_weights": {"base_alcohol": 40, "flavor": 40, "tool": 20},
+	  "improvement_costs": [300, 400, 500, 600],
+	  "sprite": "tincture_maker"
+	},
+	{
+	  "id": "carbon_filter",
+	  "name": "Углеродный фильтр",
+	  "description": "Улучшает качество продукции, убирая примеси.",
+	  "production_type": "samogon",
+	  "slots": [
+		{"id": "slot1", "type": "base_alcohol", "required": true, "display_name": "Неочищенный алкоголь"}
+	  ],
+	  "processing_time": 15,
+	  "quality_weights": {"base_alcohol": 50, "tool": 50},
+	  "improvement_costs": [250, 350, 450, 550],
+	  "sprite": "carbon_filter"
+	},
+	{
+	  "id": "rectification_column",
+	  "name": "Ректификационная колонна",
+	  "description": "Для получения чистого спирта высокой крепости.",
+	  "production_type": "samogon",
+	  "slots": [
+		{"id": "slot1", "type": "base_alcohol", "required": true, "display_name": "Спирт-сырец"}
+	  ],
+	  "processing_time": 40,
+	  "quality_weights": {"base_alcohol": 50, "tool": 50},
+	  "improvement_costs": [500, 600, 700, 800],
+	  "sprite": "rectification_column"
+	},
+	{
+	  "id": "fractional_still",
+	  "name": "Фракционный дистиллятор",
+	  "description": "Позволяет отделять вредные фракции для повышения качества.",
+	  "production_type": "samogon",
+	  "slots": [
+		{"id": "slot1", "type": "mash", "required": true, "display_name": "Брага"}
+	  ],
+	  "processing_time": 25,
+	  "quality_weights": {"mash": 40, "tool": 60},
+	  "improvement_costs": [400, 500, 600, 700],
+	  "sprite": "fractional_still"
+	},
+	{
+	  "id": "aging_barrel",
+	  "name": "Бочка для выдержки",
+	  "description": "Дубовая бочка для выдержки напитков.",
+	  "production_type": "samogon",
+	  "slots": [
+		{"id": "slot1", "type": "base_alcohol", "required": true, "display_name": "Дистиллят"},
+		{"id": "slot2", "type": "aging", "required": false, "display_name": "Добавка для выдержки"}
+	  ],
+	  "processing_time": 60,
+	  "quality_weights": {"base_alcohol": 70, "aging": 20, "tool": 10},
+	  "improvement_costs": [300, 400, 500, 600],
+	  "sprite": "aging_barrel"
+	}
+  ],
+  "beer": [
+	{
+	  "id": "mash_tun",
+	  "name": "Заторный чан",
+	  "description": "Для затирания солода при производстве пива.",
+	  "production_type": "beer",
+	  "slots": [
+		{"id": "slot1", "type": "base", "required": true, "display_name": "Вода"},
+		{"id": "slot2", "type": "mash_ingredient", "required": true, "display_name": "Солод"}
+	  ],
+	  "processing_time": 15,
+	  "quality_weights": {"base": 30, "mash_ingredient": 50, "tool": 20},
+	  "improvement_costs": [200, 300, 400, 500],
+	  "sprite": "mash_tun"
+	},
+	{
+	  "id": "brewing_kettle",
+	  "name": "Сусловарочный котел",
+	  "description": "Для варки пивного сусла с хмелем.",
+	  "production_type": "beer",
+	  "slots": [
+		{"id": "slot1", "type": "wort", "required": true, "display_name": "Сусло"},
+		{"id": "slot2", "type": "beer_additive", "required": true, "display_name": "Хмель/Добавка"}
+	  ],
+	  "processing_time": 20,
+	  "quality_weights": {"wort": 50, "beer_additive": 40, "tool": 10},
+	  "improvement_costs": [250, 350, 450, 550],
+	  "sprite": "brewing_kettle"
+	},
+	{
+	  "id": "beer_fermenter",
+	  "name": "Пивной ферментер",
+	  "description": "Для ферментации пивного сусла.",
+	  "production_type": "beer",
+	  "slots": [
+		{"id": "slot1", "type": "hopped_wort", "required": true, "display_name": "Охмеленное сусло"},
+		{"id": "slot2", "type": "fermentation", "required": true, "display_name": "Дрожжи"}
+	  ],
+	  "processing_time": 30,
+	  "quality_weights": {"hopped_wort": 60, "fermentation": 30, "tool": 10},
+	  "improvement_costs": [300, 400, 500, 600],
+	  "sprite": "beer_fermenter"
+	},
+	{
+	  "id": "carbonation_system",
+	  "name": "Система карбонизации",
+	  "description": "Для насыщения пива углекислым газом.",
+	  "production_type": "beer",
+	  "slots": [
+		{"id": "slot1", "type": "green_beer", "required": true, "display_name": "Молодое пиво"}
+	  ],
+	  "processing_time": 10,
+	  "quality_weights": {"green_beer": 80, "tool": 20},
+	  "improvement_costs": [200, 300, 400, 500],
+	  "sprite": "carbonation_system"
+	},
+	{
+	  "id": "dry_hopping_tank",
+	  "name": "Чан для сухого охмеления",
+	  "description": "Для добавления аромата хмеля в конце ферментации.",
+	  "production_type": "beer",
+	  "slots": [
+		{"id": "slot1", "type": "green_beer", "required": true, "display_name": "Молодое пиво"},
+		{"id": "slot2", "type": "beer_additive", "required": true, "display_name": "Ароматический хмель"}
+	  ],
+	  "processing_time": 25,
+	  "quality_weights": {"green_beer": 50, "beer_additive": 40, "tool": 10},
+	  "improvement_costs": [350, 450, 550, 650],
+	  "sprite": "dry_hopping_tank"
+	},
+	{
+	  "id": "complete_brewery",
+	  "name": "Комплексная пивоварня",
+	  "description": "Универсальная система для всех этапов пивоварения.",
+	  "production_type": "beer",
+	  "slots": [
+		{"id": "slot1", "type": "base", "required": true, "display_name": "Вода"},
+		{"id": "slot2", "type": "mash_ingredient", "required": true, "display_name": "Солод"},
+		{"id": "slot3", "type": "beer_additive", "required": true, "display_name": "Хмель"},
+		{"id": "slot4", "type": "fermentation", "required": true, "display_name": "Дрожжи"}
+	  ],
+	  "processing_time": 60,
+	  "quality_weights": {"base": 10, "mash_ingredient": 30, "beer_additive": 30, "fermentation": 10, "tool": 20},
+	  "improvement_costs": [600, 800, 1000, 1200],
+	  "sprite": "complete_brewery"
+	}
+  ],
+  "wine": [
+	{
+	  "id": "destemmer",
+	  "name": "Гребнеотделитель",
+	  "description": "Для отделения ягод от гребней.",
+	  "production_type": "wine",
+	  "slots": [
+		{"id": "slot1", "type": "mash_ingredient", "required": true, "display_name": "Виноград"}
+	  ],
+	  "processing_time": 10,
+	  "quality_weights": {"mash_ingredient": 80, "tool": 20},
+	  "improvement_costs": [200, 300, 400, 500],
+	  "sprite": "destemmer"
+	},
+	{
+	  "id": "wine_press",
+	  "name": "Винный пресс",
+	  "description": "Для бережного отжима сока из винограда.",
+	  "production_type": "wine",
+	  "slots": [
+		{"id": "slot1", "type": "destemmed_grape", "required": true, "display_name": "Очищенный виноград"}
+	  ],
+	  "processing_time": 15,
+	  "quality_weights": {"destemmed_grape": 70, "tool": 30},
+	  "improvement_costs": [250, 350, 450, 550],
+	  "sprite": "wine_press"
+	},
+	{
+	  "id": "wine_fermenter",
+	  "name": "Винный ферментер",
+	  "description": "Для ферментации виноградного сусла.",
+	  "production_type": "wine",
+	  "slots": [
+		{"id": "slot1", "type": "grape_juice", "required": true, "display_name": "Виноградное сусло"},
+		{"id": "slot2", "type": "fermentation", "required": true, "display_name": "Винные дрожжи"},
+		{"id": "slot3", "type": "wine_additive", "required": false, "display_name": "Добавка"}
+	  ],
+	  "processing_time": 40,
+	  "quality_weights": {"grape_juice": 50, "fermentation": 30, "wine_additive": 10, "tool": 10},
+	  "improvement_costs": [300, 400, 500, 600],
+	  "sprite": "wine_fermenter"
+	},
+	{
+	  "id": "wine_aging_barrel",
+	  "name": "Бочка для выдержки вина",
+	  "description": "Дубовая бочка для выдержки и улучшения вкуса вина.",
+	  "production_type": "wine",
+	  "slots": [
+		{"id": "slot1", "type": "young_wine", "required": true, "display_name": "Молодое вино"},
+		{"id": "slot2", "type": "aging", "required": false, "display_name": "Дубовая щепа"}
+	  ],
+	  "processing_time": 60,
+	  "quality_weights": {"young_wine": 80, "aging": 10, "tool": 10},
+	  "improvement_costs": [400, 500, 600, 700],
+	  "sprite": "wine_barrel"
+	},
+	{
+	  "id": "batonnage_tank",
+	  "name": "Чан для батонажа",
+	  "description": "Для перемешивания осадка и придания сложности вкусу.",
+	  "production_type": "wine",
+	  "slots": [
+		{"id": "slot1", "type": "young_wine", "required": true, "display_name": "Молодое вино"}
+	  ],
+	  "processing_time": 30,
+	  "quality_weights": {"young_wine": 70, "tool": 30},
+	  "improvement_costs": [300, 400, 500, 600],
+	  "sprite": "batonnage_tank"
+	},
+	{
+	  "id": "blending_tank",
+	  "name": "Чан для купажирования",
+	  "description": "Для смешивания вин разных сортов винограда.",
+	  "production_type": "wine",
+	  "slots": [
+		{"id": "slot1", "type": "young_wine", "required": true, "display_name": "Вино 1"},
+		{"id": "slot2", "type": "young_wine", "required": true, "display_name": "Вино 2"},
+		{"id": "slot3", "type": "young_wine", "required": false, "display_name": "Вино 3"}
+	  ],
+	  "processing_time": 20,
+	  "quality_weights": {"young_wine": 90, "tool": 10},
+	  "improvement_costs": [350, 450, 550, 650],
+	  "sprite": "blending_tank"
+	},
+	{
+	  "id": "sparkling_wine_tank",
+	  "name": "Резервуар для игристых вин",
+	  "description": "Для производства игристых вин методом Шарма.",
+	  "production_type": "wine",
+	  "slots": [
+		{"id": "slot1", "type": "young_wine", "required": true, "display_name": "Базовое вино"},
+		{"id": "slot2", "type": "fermentation", "required": true, "display_name": "Дрожжи для игристых"}
+	  ],
+	  "processing_time": 45,
+	  "quality_weights": {"young_wine": 60, "fermentation": 30, "tool": 10},
+	  "improvement_costs": [500, 600, 700, 800],
+	  "sprite": "sparkling_wine_tank"
+	},
+	{
+	  "id": "complete_winery",
+	  "name": "Комплексная винодельня",
+	  "description": "Универсальная система для всех этапов виноделия.",
+	  "production_type": "wine",
+	  "slots": [
+		{"id": "slot1", "type": "mash_ingredient", "required": true, "display_name": "Виноград"},
+		{"id": "slot2", "type": "fermentation", "required": true, "display_name": "Дрожжи"},
+		{"id": "slot3", "type": "wine_additive", "required": false, "display_name": "Добавка"}
+	  ],
+	  "processing_time": 70,
+	  "quality_weights": {"mash_ingredient": 50, "fermentation": 20, "wine_additive": 10, "tool": 20},
+	  "improvement_costs": [700, 900, 1100, 1300],
+	  "sprite": "complete_winery"
+	}
+  ]
+}

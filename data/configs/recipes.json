@@ -1,0 +1,564 @@
+{
+  "intermediate_products": [
+	{
+	  "id": "sugar_mash",
+	  "name": "Сахарная брага",
+	  "type": "mash",
+	  "production_type": "samogon",
+	  "description": "Базовая брага из сахара, готовая к перегонке.",
+	  "tool_id": "fermentation",
+	  "ingredients": ["water", "sugar", "koji"],
+	  "sprite": "sugar_mash"
+	},
+	{
+	  "id": "corn_mash",
+	  "name": "Кукурузная брага",
+	  "type": "mash",
+	  "production_type": "samogon",
+	  "description": "Брага из кукурузы для бурбона.",
+	  "tool_id": "fermentation",
+	  "ingredients": ["water", "corn", "koji"],
+	  "sprite": "corn_mash"
+	},
+	{
+	  "id": "grape_mash",
+	  "name": "Виноградная брага",
+	  "type": "mash",
+	  "production_type": "samogon",
+	  "description": "Брага из винограда для бренди.",
+	  "tool_id": "fermentation",
+	  "ingredients": ["water", "grape", "koji"],
+	  "sprite": "grape_mash"
+	},
+	{
+	  "id": "apple_mash",
+	  "name": "Яблочная брага",
+	  "type": "mash",
+	  "production_type": "samogon",
+	  "description": "Брага из яблок для кальвадоса.",
+	  "tool_id": "fermentation",
+	  "ingredients": ["water", "apple", "koji"],
+	  "sprite": "apple_mash"
+	},
+	{
+	  "id": "rice_mash",
+	  "name": "Рисовая брага",
+	  "type": "mash",
+	  "production_type": "samogon",
+	  "description": "Брага из риса для рисового самогона.",
+	  "tool_id": "fermentation",
+	  "ingredients": ["water", "rice", "koji"],
+	  "sprite": "rice_mash"
+	},
+	{
+	  "id": "barley_mash",
+	  "name": "Ячменная брага",
+	  "type": "mash",
+	  "production_type": "samogon",
+	  "description": "Брага из ячменя для солодового дистиллята.",
+	  "tool_id": "fermentation",
+	  "ingredients": ["water", "barley", "koji"],
+	  "sprite": "barley_mash"
+	},
+	{
+	  "id": "rye_mash",
+	  "name": "Ржаная брага",
+	  "type": "mash",
+	  "production_type": "samogon",
+	  "description": "Брага из ржи с характерным вкусом.",
+	  "tool_id": "fermentation",
+	  "ingredients": ["water", "rye", "koji"],
+	  "sprite": "rye_mash"
+	},
+	{
+	  "id": "plum_mash",
+	  "name": "Сливовая брага",
+	  "type": "mash",
+	  "production_type": "samogon",
+	  "description": "Брага из слив для сливовицы.",
+	  "tool_id": "fermentation",
+	  "ingredients": ["water", "plum", "koji"],
+	  "sprite": "plum_mash"
+	},
+	{
+	  "id": "pineapple_mash",
+	  "name": "Ананасовая брага",
+	  "type": "mash",
+	  "production_type": "samogon",
+	  "description": "Экзотическая брага из ананаса.",
+	  "tool_id": "fermentation",
+	  "ingredients": ["water", "pineapple", "koji"],
+	  "sprite": "pineapple_mash"
+	},
+	{
+	  "id": "pure_alcohol",
+	  "name": "Чистый спирт",
+	  "type": "base_alcohol",
+	  "production_type": "samogon",
+	  "description": "Высокоочищенный спирт для настоек.",
+	  "tool_id": "rectification_column",
+	  "ingredients": ["moonshine"],
+	  "sprite": "pure_alcohol"
+	},
+	{
+	  "id": "pale_wort",
+	  "name": "Светлое сусло",
+	  "type": "wort",
+	  "production_type": "beer",
+	  "description": "Базовое пивное сусло из светлого солода.",
+	  "tool_id": "mash_tun",
+	  "ingredients": ["water", "pale_malt"],
+	  "sprite": "pale_wort"
+	},
+	{
+	  "id": "dark_wort",
+	  "name": "Темное сусло",
+	  "type": "wort",
+	  "production_type": "beer",
+	  "description": "Пивное сусло с добавлением темного солода.",
+	  "tool_id": "mash_tun",
+	  "ingredients": ["water", "dark_malt"],
+	  "sprite": "dark_wort"
+	},
+	{
+	  "id": "wheat_wort",
+	  "name": "Пшеничное сусло",
+	  "type": "wort",
+	  "production_type": "beer",
+	  "description": "Пивное сусло из пшеницы для пшеничного пива.",
+	  "tool_id": "mash_tun",
+	  "ingredients": ["water", "wheat"],
+	  "sprite": "wheat_wort"
+	},
+	{
+	  "id": "hopped_pale_wort",
+	  "name": "Охмеленное светлое сусло",
+	  "type": "hopped_wort",
+	  "production_type": "beer",
+	  "description": "Сусло с добавлением хмеля.",
+	  "tool_id": "brewing_kettle",
+	  "ingredients": ["pale_wort", "hops"],
+	  "sprite": "hopped_pale_wort"
+	},
+	{
+	  "id": "hopped_dark_wort",
+	  "name": "Охмеленное темное сусло",
+	  "type": "hopped_wort",
+	  "production_type": "beer",
+	  "description": "Темное сусло с добавлением хмеля.",
+	  "tool_id": "brewing_kettle",
+	  "ingredients": ["dark_wort", "hops"],
+	  "sprite": "hopped_dark_wort"
+	},
+	{
+	  "id": "hopped_wheat_wort",
+	  "name": "Охмеленное пшеничное сусло",
+	  "type": "hopped_wort",
+	  "production_type": "beer",
+	  "description": "Пшеничное сусло с добавлением хмеля.",
+	  "tool_id": "brewing_kettle",
+	  "ingredients": ["wheat_wort", "hops"],
+	  "sprite": "hopped_wheat_wort"
+	},
+	{
+	  "id": "young_pale_beer",
+	  "name": "Молодое светлое пиво",
+	  "type": "green_beer",
+	  "production_type": "beer",
+	  "description": "Ферментированное светлое пиво перед карбонизацией.",
+	  "tool_id": "beer_fermenter",
+	  "ingredients": ["hopped_pale_wort", "beer_yeast"],
+	  "sprite": "young_pale_beer"
+	},
+	{
+	  "id": "young_dark_beer",
+	  "name": "Молодое темное пиво",
+	  "type": "green_beer",
+	  "production_type": "beer",
+	  "description": "Ферментированное темное пиво перед карбонизацией.",
+	  "tool_id": "beer_fermenter",
+	  "ingredients": ["hopped_dark_wort", "beer_yeast"],
+	  "sprite": "young_dark_beer"
+	},
+	{
+	  "id": "young_wheat_beer",
+	  "name": "Молодое пшеничное пиво",
+	  "type": "green_beer",
+	  "production_type": "beer",
+	  "description": "Ферментированное пшеничное пиво перед карбонизацией.",
+	  "tool_id": "beer_fermenter",
+	  "ingredients": ["hopped_wheat_wort", "beer_yeast"],
+	  "sprite": "young_wheat_beer"
+	},
+	{
+	  "id": "destemmed_red_grape",
+	  "name": "Очищенный красный виноград",
+	  "type": "destemmed_grape",
+	  "production_type": "wine",
+	  "description": "Красный виноград, отделенный от гребней.",
+	  "tool_id": "destemmer",
+	  "ingredients": ["red_grape"],
+	  "sprite": "destemmed_red_grape"
+	},
+	{
+	  "id": "destemmed_white_grape",
+	  "name": "Очищенный белый виноград",
+	  "type": "destemmed_grape",
+	  "production_type": "wine",
+	  "description": "Белый виноград, отделенный от гребней.",
+	  "tool_id": "destemmer",
+	  "ingredients": ["white_grape"],
+	  "sprite": "destemmed_white_grape"
+	},
+	{
+	  "id": "red_grape_juice",
+	  "name": "Красное сусло",
+	  "type": "grape_juice",
+	  "production_type": "wine",
+	  "description": "Сок из красного винограда для красного вина.",
+	  "tool_id": "wine_press",
+	  "ingredients": ["destemmed_red_grape"],
+	  "sprite": "red_grape_juice"
+	},
+	{
+	  "id": "white_grape_juice",
+	  "name": "Белое сусло",
+	  "type": "grape_juice",
+	  "production_type": "wine",
+	  "description": "Сок из белого винограда для белого вина.",
+	  "tool_id": "wine_press",
+	  "ingredients": ["destemmed_white_grape"],
+	  "sprite": "white_grape_juice"
+	},
+	{
+	  "id": "young_red_wine",
+	  "name": "Молодое красное вино",
+	  "type": "young_wine",
+	  "production_type": "wine",
+	  "description": "Ферментированное красное вино перед выдержкой.",
+	  "tool_id": "wine_fermenter",
+	  "ingredients": ["red_grape_juice", "wine_yeast"],
+	  "sprite": "young_red_wine"
+	},
+	{
+	  "id": "young_white_wine",
+	  "name": "Молодое белое вино",
+	  "type": "young_wine",
+	  "production_type": "wine",
+	  "description": "Ферментированное белое вино перед выдержкой.",
+	  "tool_id": "wine_fermenter",
+	  "ingredients": ["white_grape_juice", "wine_yeast"],
+	  "sprite": "young_white_wine"
+	}
+  ],
+  "final_products": [
+	{
+	  "id": "moonshine",
+	  "name": "Самогон",
+	  "type": "final_product",
+	  "production_type": "samogon",
+	  "description": "Классический крепкий напиток. Основа для настоек.",
+	  "tool_id": "distiller",
+	  "ingredients": ["sugar_mash"],
+	  "sell_prices": [30, 40, 50, 69],
+	  "sprite": "moonshine"
+	},
+	{
+	  "id": "bourbon",
+	  "name": "Бурбон",
+	  "type": "final_product",
+	  "production_type": "samogon",
+	  "description": "Кукурузный дистиллят с характерным вкусом.",
+	  "tool_id": "distiller",
+	  "ingredients": ["corn_mash"],
+	  "sell_prices": [35, 45, 55, 70],
+	  "sprite": "bourbon"
+	},
+	{
+	  "id": "brandy",
+	  "name": "Бренди",
+	  "type": "final_product",
+	  "production_type": "samogon",
+	  "description": "Виноградный дистиллят для ценителей.",
+	  "tool_id": "distiller",
+	  "ingredients": ["grape_mash"],
+	  "sell_prices": [40, 50, 60, 75],
+	  "sprite": "brandy"
+	},
+	{
+	  "id": "calvados",
+	  "name": "Кальвадос",
+	  "type": "final_product",
+	  "production_type": "samogon",
+	  "description": "Яблочный дистиллят с фруктовым ароматом.",
+	  "tool_id": "distiller",
+	  "ingredients": ["apple_mash"],
+	  "sell_prices": [35, 45, 55, 70],
+	  "sprite": "calvados"
+	},
+	{
+	  "id": "rice_spirit",
+	  "name": "Рисовый самогон",
+	  "type": "final_product",
+	  "production_type": "samogon",
+	  "description": "Дистиллят из рисовой браги.",
+	  "tool_id": "distiller",
+	  "ingredients": ["rice_mash"],
+	  "sell_prices": [50, 60, 70, 85],
+	  "sprite": "rice_spirit"
+	},
+	{
+	  "id": "malt_whiskey",
+	  "name": "Солодовый виски",
+	  "type": "final_product",
+	  "production_type": "samogon",
+	  "description": "Дистиллят из ячменного солода.",
+	  "tool_id": "distiller",
+	  "ingredients": ["barley_mash"],
+	  "sell_prices": [45, 55, 65, 80],
+	  "sprite": "malt_whiskey"
+	},
+	{
+	  "id": "rye_whiskey",
+	  "name": "Ржаной виски",
+	  "type": "final_product",
+	  "production_type": "samogon",
+	  "description": "Дистиллят с ржаным характером.",
+	  "tool_id": "distiller",
+	  "ingredients": ["rye_mash"],
+	  "sell_prices": [40, 50, 60, 75],
+	  "sprite": "rye_whiskey"
+	},
+	{
+	  "id": "slivovitz",
+	  "name": "Сливовица",
+	  "type": "final_product",
+	  "production_type": "samogon",
+	  "description": "Традиционный сливовый дистиллят.",
+	  "tool_id": "distiller",
+	  "ingredients": ["plum_mash"],
+	  "sell_prices": [40, 50, 60, 75],
+	  "sprite": "slivovitz"
+	},
+	{
+	  "id": "pineapple_spirit",
+	  "name": "Ананасовый самогон",
+	  "type": "final_product",
+	  "production_type": "samogon",
+	  "description": "Экзотический дистиллят с тропическим ароматом.",
+	  "tool_id": "distiller",
+	  "ingredients": ["pineapple_mash"],
+	  "sell_prices": [55, 65, 75, 90],
+	  "sprite": "pineapple_spirit"
+	},
+	{
+	  "id": "vanilla_tincture",
+	  "name": "Ванильная настойка",
+	  "type": "final_product",
+	  "production_type": "samogon",
+	  "description": "Сладкая настойка с ванильным ароматом.",
+	  "tool_id": "tincture_maker",
+	  "ingredients": ["pure_alcohol", "vanilla"],
+	  "sell_prices": [60, 70, 80, 95],
+	  "sprite": "vanilla_tincture"
+	},
+	{
+	  "id": "cinnamon_tincture",
+	  "name": "Коричная настойка",
+	  "type": "final_product",
+	  "production_type": "samogon",
+	  "description": "Пряная настойка с корицей.",
+	  "tool_id": "tincture_maker",
+	  "ingredients": ["pure_alcohol", "cinnamon"],
+	  "sell_prices": [55, 65, 75, 90],
+	  "sprite": "cinnamon_tincture"
+	},
+	{
+	  "id": "honey_tincture",
+	  "name": "Медовуха",
+	  "type": "final_product",
+	  "production_type": "samogon",
+	  "description": "Сладкая настойка на меду. Популярна у богатых клиентов.",
+	  "tool_id": "tincture_maker",
+	  "ingredients": ["pure_alcohol", "honey"],
+	  "sell_prices": [65, 75, 85, 100],
+	  "sprite": "honey_tincture"
+	},
+	{
+	  "id": "juniper_tincture",
+	  "name": "Джиноподобная настойка",
+	  "type": "final_product",
+	  "production_type": "samogon",
+	  "description": "Ароматная настойка на можжевельнике.",
+	  "tool_id": "tincture_maker",
+	  "ingredients": ["pure_alcohol", "juniper"],
+	  "sell_prices": [60, 70, 80, 95],
+	  "sprite": "juniper_tincture"
+	},
+	{
+	  "id": "coffee_tincture",
+	  "name": "Кофейный ликер",
+	  "type": "final_product",
+	  "production_type": "samogon",
+	  "description": "Кофейная настойка с насыщенным вкусом.",
+	  "tool_id": "tincture_maker",
+	  "ingredients": ["pure_alcohol", "coffee"],
+	  "sell_prices": [55, 65, 75, 90],
+	  "sprite": "coffee_tincture"
+	},
+	{
+	  "id": "aged_bourbon",
+	  "name": "Выдержанный бурбон",
+	  "type": "final_product",
+	  "production_type": "samogon",
+	  "description": "Бурбон, выдержанный на дубовой щепе.",
+	  "tool_id": "aging_barrel",
+	  "ingredients": ["bourbon", "oak_chips"],
+	  "sell_prices": [75, 90, 105, 125],
+	  "sprite": "aged_bourbon"
+	},
+	{
+	  "id": "aged_brandy",
+	  "name": "Выдержанный бренди",
+	  "type": "final_product",
+	  "production_type": "samogon",
+	  "description": "Бренди с длительной выдержкой в дубе.",
+	  "tool_id": "aging_barrel",
+	  "ingredients": ["brandy", "oak_chips"],
+	  "sell_prices": [80, 95, 110, 130],
+	  "sprite": "aged_brandy"
+	},
+	{
+	  "id": "pale_lager",
+	  "name": "Светлый лагер",
+	  "type": "final_product",
+	  "production_type": "beer",
+	  "description": "Классическое легкое пиво с мягким вкусом.",
+	  "tool_id": "carbonation_system",
+	  "ingredients": ["young_pale_beer"],
+	  "sell_prices": [20, 25, 30, 40],
+	  "sprite": "pale_lager"
+	},
+	{
+	  "id": "dark_lager",
+	  "name": "Темный лагер",
+	  "type": "final_product",
+	  "production_type": "beer",
+	  "description": "Темное пиво с карамельными нотками.",
+	  "tool_id": "carbonation_system",
+	  "ingredients": ["young_dark_beer"],
+	  "sell_prices": [25, 30, 35, 45],
+	  "sprite": "dark_lager"
+	},
+	{
+	  "id": "wheat_beer",
+	  "name": "Пшеничное пиво",
+	  "type": "final_product",
+	  "production_type": "beer",
+	  "description": "Нефильтрованное пшеничное пиво с фруктовыми нотками.",
+	  "tool_id": "carbonation_system",
+	  "ingredients": ["young_wheat_beer"],
+	  "sell_prices": [25, 30, 35, 45],
+	  "sprite": "wheat_beer"
+	},
+	{
+	  "id": "ipa",
+	  "name": "Индийский бледный эль",
+	  "type": "final_product",
+	  "production_type": "beer",
+	  "description": "Хмелевое пиво с выраженной горечью.",
+	  "tool_id": "dry_hopping_tank",
+	  "ingredients": ["young_pale_beer", "bitter_hops"],
+	  "sell_prices": [30, 35, 40, 50],
+	  "sprite": "ipa"
+	},
+	{
+	  "id": "stout",
+	  "name": "Стаут",
+	  "type": "final_product",
+	  "production_type": "beer",
+	  "description": "Темное плотное пиво с шоколадными и кофейными нотками.",
+	  "tool_id": "complete_brewery",
+	  "ingredients": ["water", "chocolate_malt", "bitter_hops", "beer_yeast"],
+	  "sell_prices": [35, 40, 45, 55],
+	  "sprite": "stout"
+	},
+	{
+	  "id": "fruit_beer",
+	  "name": "Фруктовое пиво",
+	  "type": "final_product",
+	  "production_type": "beer",
+	  "description": "Легкое пиво с добавлением фруктов.",
+	  "tool_id": "dry_hopping_tank",
+	  "ingredients": ["young_pale_beer", "fruit_puree"],
+	  "sell_prices": [30, 35, 40, 50],
+	  "sprite": "fruit_beer"
+	},
+	{
+	  "id": "red_wine",
+	  "name": "Красное вино",
+	  "type": "final_product",
+	  "production_type": "wine",
+	  "description": "Полнотелое красное вино с богатым букетом.",
+	  "tool_id": "wine_aging_barrel",
+	  "ingredients": ["young_red_wine"],
+	  "sell_prices": [40, 50, 60, 75],
+	  "sprite": "red_wine"
+	},
+	{
+	  "id": "white_wine",
+	  "name": "Белое вино",
+	  "type": "final_product",
+	  "production_type": "wine",
+	  "description": "Легкое белое вино с фруктовыми нотками.",
+	  "tool_id": "wine_aging_barrel",
+	  "ingredients": ["young_white_wine"],
+	  "sell_prices": [35, 45, 55, 70],
+	  "sprite": "white_wine"
+	},
+	{
+	  "id": "aged_red_wine",
+	  "name": "Выдержанное красное вино",
+	  "type": "final_product",
+	  "production_type": "wine",
+	  "description": "Красное вино с длительной выдержкой в дубе.",
+	  "tool_id": "wine_aging_barrel",
+	  "ingredients": ["young_red_wine", "oak_chips_wine"],
+	  "sell_prices": [60, 75, 90, 110],
+	  "sprite": "aged_red_wine"
+	},
+	{
+	  "id": "blended_wine",
+	  "name": "Купажированное вино",
+	  "type": "final_product",
+	  "production_type": "wine",
+	  "description": "Сложное вино из нескольких сортов винограда.",
+	  "tool_id": "blending_tank",
+	  "ingredients": ["young_red_wine", "young_white_wine"],
+	  "sell_prices": [50, 65, 80, 100],
+	  "sprite": "blended_wine"
+	},
+	{
+	  "id": "sparkling_wine",
+	  "name": "Игристое вино",
+	  "type": "final_product",
+	  "production_type": "wine",
+	  "description": "Шипучее вино с тонкими пузырьками.",
+	  "tool_id": "sparkling_wine_tank",
+	  "ingredients": ["young_white_wine", "champagne_yeast"],
+	  "sell_prices": [55, 70, 85, 105],
+	  "sprite": "sparkling_wine"
+	},
+	{
+	  "id": "dessert_wine",
+	  "name": "Десертное вино",
+	  "type": "final_product",
+	  "production_type": "wine",
+	  "description": "Сладкое вино для подачи к десертам.",
+	  "tool_id": "wine_fermenter",
+	  "ingredients": ["white_grape_juice", "wine_yeast", "honey"],
+	  "sell_prices": [45, 60, 75, 95],
+	  "sprite": "dessert_wine"
+	}
+  ]
+}

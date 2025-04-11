@@ -1,0 +1,470 @@
+{
+  "common": [
+	{
+	  "id": "water",
+	  "name": "Вода",
+	  "type": "base",
+	  "production_type": "all",
+	  "description": "Основа всех напитков. Чистая вода - залог качественного результата.",
+	  "quality_prices": [10, 12, 15, 20],
+	  "starting_count": 10,
+	  "sprite": "water"
+	}
+  ],
+  "samogon": [
+	{
+	  "id": "sugar",
+	  "name": "Сахар",
+	  "type": "mash_ingredient",
+	  "production_type": "samogon",
+	  "description": "Сладкий ингредиент для браги. Влияет на крепость.",
+	  "quality_prices": [10, 12, 15, 20],
+	  "starting_count": 5,
+	  "sprite": "sugar"
+	},
+	{
+	  "id": "corn",
+	  "name": "Кукуруза",
+	  "type": "mash_ingredient",
+	  "production_type": "samogon",
+	  "description": "Придает особый вкус и аромат бурбону.",
+	  "quality_prices": [20, 23, 25, 30],
+	  "starting_count": 0,
+	  "sprite": "corn"
+	},
+	{
+	  "id": "grape",
+	  "name": "Виноград",
+	  "type": "mash_ingredient",
+	  "production_type": "samogon",
+	  "description": "Сладкий виноград для браги под бренди.",
+	  "quality_prices": [25, 27, 30, 35],
+	  "starting_count": 0,
+	  "sprite": "grape"
+	},
+	{
+	  "id": "apple",
+	  "name": "Яблоки",
+	  "type": "mash_ingredient",
+	  "production_type": "samogon",
+	  "description": "Сочные яблоки для кальвадоса.",
+	  "quality_prices": [30, 32, 35, 40],
+	  "starting_count": 0,
+	  "sprite": "apple"
+	},
+	{
+	  "id": "rice",
+	  "name": "Рис",
+	  "type": "mash_ingredient",
+	  "production_type": "samogon",
+	  "description": "Основа для рисового самогона.",
+	  "quality_prices": [30, 32, 35, 40],
+	  "starting_count": 0,
+	  "sprite": "rice"
+	},
+	{
+	  "id": "koji",
+	  "name": "Кодзи",
+	  "type": "fermentation",
+	  "production_type": "samogon",
+	  "description": "Ферментативная культура для сбраживания.",
+	  "quality_prices": [10, 15, 20, 25],
+	  "starting_count": 0,
+	  "sprite": "koji"
+	},
+	{
+	  "id": "barley",
+	  "name": "Ячмень",
+	  "type": "mash_ingredient",
+	  "production_type": "samogon",
+	  "description": "Зерно для солодового дистиллята.",
+	  "quality_prices": [25, 30, 35, 40],
+	  "starting_count": 0,
+	  "sprite": "barley"
+	},
+	{
+	  "id": "rye",
+	  "name": "Рожь",
+	  "type": "mash_ingredient",
+	  "production_type": "samogon",
+	  "description": "Зерно для ржаного самогона с пряным вкусом.",
+	  "quality_prices": [28, 32, 38, 42],
+	  "starting_count": 0,
+	  "sprite": "rye"
+	},
+	{
+	  "id": "plum",
+	  "name": "Слива",
+	  "type": "mash_ingredient",
+	  "production_type": "samogon",
+	  "description": "Сладкая слива для фруктового дистиллята.",
+	  "quality_prices": [30, 35, 40, 45],
+	  "starting_count": 0,
+	  "sprite": "plum"
+	},
+	{
+	  "id": "pineapple",
+	  "name": "Ананас",
+	  "type": "mash_ingredient",
+	  "production_type": "samogon",
+	  "description": "Экзотический фрукт для необычного самогона.",
+	  "quality_prices": [40, 45, 50, 55],
+	  "starting_count": 0,
+	  "sprite": "pineapple"
+	},
+	{
+	  "id": "fast_yeast",
+	  "name": "Быстрые дрожжи",
+	  "type": "fermentation",
+	  "production_type": "samogon",
+	  "description": "Ускоряют процесс брожения в 2 раза.",
+	  "quality_prices": [15, 20, 25, 30],
+	  "starting_count": 0,
+	  "sprite": "fast_yeast"
+	},
+	{
+	  "id": "spirt_yeast",
+	  "name": "Спиртоустойчивые дрожжи",
+	  "type": "fermentation",
+	  "production_type": "samogon",
+	  "description": "Позволяют получить более крепкую брагу.",
+	  "quality_prices": [20, 25, 30, 35],
+	  "starting_count": 0,
+	  "sprite": "spirt_yeast"
+	},
+	{
+	  "id": "vanilla",
+	  "name": "Ваниль",
+	  "type": "flavor",
+	  "production_type": "samogon",
+	  "description": "Придает напитку сладкий аромат.",
+	  "quality_prices": [25, 30, 35, 40],
+	  "starting_count": 0,
+	  "sprite": "vanilla"
+	},
+	{
+	  "id": "cinnamon",
+	  "name": "Корица",
+	  "type": "flavor",
+	  "production_type": "samogon",
+	  "description": "Добавляет пряные ноты и тепло.",
+	  "quality_prices": [20, 25, 30, 35],
+	  "starting_count": 0,
+	  "sprite": "cinnamon"
+	},
+	{
+	  "id": "juniper",
+	  "name": "Можжевельник",
+	  "type": "flavor",
+	  "production_type": "samogon",
+	  "description": "Основа для джиноподобных напитков.",
+	  "quality_prices": [30, 35, 40, 45],
+	  "starting_count": 0,
+	  "sprite": "juniper"
+	},
+	{
+	  "id": "oak_chips",
+	  "name": "Дубовая щепа",
+	  "type": "aging",
+	  "production_type": "samogon",
+	  "description": "Придает напитку благородный вкус выдержанного алкоголя.",
+	  "quality_prices": [35, 40, 45, 50],
+	  "starting_count": 0,
+	  "sprite": "oak_chips"
+	},
+	{
+	  "id": "honey",
+	  "name": "Мёд",
+	  "type": "flavor",
+	  "production_type": "samogon",
+	  "description": "Добавляет сладость и особый аромат.",
+	  "quality_prices": [30, 35, 40, 45],
+	  "starting_count": 0,
+	  "sprite": "honey"
+	},
+	{
+	  "id": "coffee",
+	  "name": "Кофейные зерна",
+	  "type": "flavor",
+	  "production_type": "samogon",
+	  "description": "Придают напитку кофейный вкус и аромат.",
+	  "quality_prices": [25, 30, 35, 40],
+	  "starting_count": 0,
+	  "sprite": "coffee"
+	}
+  ],
+  "beer": [
+	{
+	  "id": "wheat",
+	  "name": "Пшеница",
+	  "type": "mash_ingredient",
+	  "production_type": "beer",
+	  "description": "Основной ингредиент для пивного сусла.",
+	  "quality_prices": [15, 17, 20, 25],
+	  "starting_count": 0,
+	  "sprite": "wheat"
+	},
+	{
+	  "id": "hops",
+	  "name": "Хмель",
+	  "type": "beer_additive",
+	  "production_type": "beer",
+	  "description": "Придает пиву характерную горечь и аромат.",
+	  "quality_prices": [20, 25, 30, 35],
+	  "starting_count": 0,
+	  "sprite": "hops"
+	},
+	{
+	  "id": "beer_yeast",
+	  "name": "Пивные дрожжи",
+	  "type": "fermentation",
+	  "production_type": "beer",
+	  "description": "Специальные дрожжи для пивоварения.",
+	  "quality_prices": [15, 20, 25, 30],
+	  "starting_count": 0,
+	  "sprite": "beer_yeast"
+	},
+	{
+	  "id": "pale_malt",
+	  "name": "Светлый солод",
+	  "type": "mash_ingredient",
+	  "production_type": "beer",
+	  "description": "Базовый солод для большинства сортов пива.",
+	  "quality_prices": [18, 22, 26, 30],
+	  "starting_count": 0,
+	  "sprite": "pale_malt"
+	},
+	{
+	  "id": "caramel_malt",
+	  "name": "Карамельный солод",
+	  "type": "mash_ingredient",
+	  "production_type": "beer",
+	  "description": "Придает пиву сладость и карамельный вкус.",
+	  "quality_prices": [22, 26, 30, 35],
+	  "starting_count": 0,
+	  "sprite": "caramel_malt"
+	},
+	{
+	  "id": "dark_malt",
+	  "name": "Темный солод",
+	  "type": "mash_ingredient",
+	  "production_type": "beer",
+	  "description": "Для темных сортов пива с насыщенным вкусом.",
+	  "quality_prices": [25, 30, 35, 40],
+	  "starting_count": 0,
+	  "sprite": "dark_malt"
+	},
+	{
+	  "id": "chocolate_malt",
+	  "name": "Шоколадный солод",
+	  "type": "mash_ingredient",
+	  "production_type": "beer",
+	  "description": "Придает пиву шоколадные и кофейные ноты.",
+	  "quality_prices": [30, 35, 40, 45],
+	  "starting_count": 0,
+	  "sprite": "chocolate_malt"
+	},
+	{
+	  "id": "smoked_malt",
+	  "name": "Копченый солод",
+	  "type": "mash_ingredient",
+	  "production_type": "beer",
+	  "description": "Для копченого пива с дымным ароматом.",
+	  "quality_prices": [28, 32, 38, 45],
+	  "starting_count": 0,
+	  "sprite": "smoked_malt"
+	},
+	{
+	  "id": "bitter_hops",
+	  "name": "Горький хмель",
+	  "type": "beer_additive",
+	  "production_type": "beer",
+	  "description": "Для придания выраженной горечи.",
+	  "quality_prices": [25, 30, 35, 40],
+	  "starting_count": 0,
+	  "sprite": "bitter_hops"
+	},
+	{
+	  "id": "aroma_hops",
+	  "name": "Ароматический хмель",
+	  "type": "beer_additive",
+	  "production_type": "beer",
+	  "description": "Для придания цветочного или цитрусового аромата.",
+	  "quality_prices": [28, 33, 38, 43],
+	  "starting_count": 0,
+	  "sprite": "aroma_hops"
+	},
+	{
+	  "id": "orange_peel",
+	  "name": "Апельсиновая цедра",
+	  "type": "beer_additive",
+	  "production_type": "beer",
+	  "description": "Добавляет цитрусовые ноты.",
+	  "quality_prices": [15, 20, 25, 30],
+	  "starting_count": 0,
+	  "sprite": "orange_peel"
+	},
+	{
+	  "id": "coriander",
+	  "name": "Кориандр",
+	  "type": "beer_additive",
+	  "production_type": "beer",
+	  "description": "Пряная добавка для бельгийских сортов.",
+	  "quality_prices": [15, 20, 25, 30],
+	  "starting_count": 0,
+	  "sprite": "coriander"
+	},
+	{
+	  "id": "fruit_puree",
+	  "name": "Фруктовое пюре",
+	  "type": "beer_additive",
+	  "production_type": "beer",
+	  "description": "Для фруктовых сортов пива.",
+	  "quality_prices": [25, 30, 35, 40],
+	  "starting_count": 0,
+	  "sprite": "fruit_puree"
+	}
+  ],
+  "wine": [
+	{
+	  "id": "red_grape",
+	  "name": "Красный виноград",
+	  "type": "mash_ingredient",
+	  "production_type": "wine",
+	  "description": "Сочный виноград для красного вина.",
+	  "quality_prices": [30, 35, 40, 45],
+	  "starting_count": 0,
+	  "sprite": "red_grape"
+	},
+	{
+	  "id": "white_grape",
+	  "name": "Белый виноград",
+	  "type": "mash_ingredient",
+	  "production_type": "wine",
+	  "description": "Нежный виноград для белого вина.",
+	  "quality_prices": [28, 32, 38, 43],
+	  "starting_count": 0,
+	  "sprite": "white_grape"
+	},
+	{
+	  "id": "wine_yeast",
+	  "name": "Винные дрожжи",
+	  "type": "fermentation",
+	  "production_type": "wine",
+	  "description": "Специальные дрожжи для виноделия.",
+	  "quality_prices": [20, 25, 30, 35],
+	  "starting_count": 0,
+	  "sprite": "wine_yeast"
+	},
+	{
+	  "id": "cabernet",
+	  "name": "Каберне Совиньон",
+	  "type": "mash_ingredient",
+	  "production_type": "wine",
+	  "description": "Сорт винограда для насыщенного красного вина.",
+	  "quality_prices": [35, 40, 45, 50],
+	  "starting_count": 0,
+	  "sprite": "cabernet"
+	},
+	{
+	  "id": "merlot",
+	  "name": "Мерло",
+	  "type": "mash_ingredient",
+	  "production_type": "wine",
+	  "description": "Сорт винограда для мягкого красного вина.",
+	  "quality_prices": [32, 38, 44, 50],
+	  "starting_count": 0,
+	  "sprite": "merlot"
+	},
+	{
+	  "id": "chardonnay",
+	  "name": "Шардоне",
+	  "type": "mash_ingredient",
+	  "production_type": "wine",
+	  "description": "Сорт винограда для универсального белого вина.",
+	  "quality_prices": [30, 36, 42, 48],
+	  "starting_count": 0,
+	  "sprite": "chardonnay"
+	},
+	{
+	  "id": "riesling",
+	  "name": "Рислинг",
+	  "type": "mash_ingredient",
+	  "production_type": "wine",
+	  "description": "Сорт винограда для ароматного белого вина.",
+	  "quality_prices": [28, 34, 40, 46],
+	  "starting_count": 0,
+	  "sprite": "riesling"
+	},
+	{
+	  "id": "pinot_noir",
+	  "name": "Пино Нуар",
+	  "type": "mash_ingredient",
+	  "production_type": "wine",
+	  "description": "Сорт винограда для изысканного красного вина.",
+	  "quality_prices": [40, 45, 50, 55],
+	  "starting_count": 0,
+	  "sprite": "pinot_noir"
+	},
+	{
+	  "id": "blueberry",
+	  "name": "Черника",
+	  "type": "mash_ingredient",
+	  "production_type": "wine",
+	  "description": "Ягода для производства плодового вина.",
+	  "quality_prices": [35, 40, 45, 50],
+	  "starting_count": 0,
+	  "sprite": "blueberry"
+	},
+	{
+	  "id": "raspberry",
+	  "name": "Малина",
+	  "type": "mash_ingredient",
+	  "production_type": "wine",
+	  "description": "Ягода для производства ароматного вина.",
+	  "quality_prices": [30, 35, 40, 45],
+	  "starting_count": 0,
+	  "sprite": "raspberry"
+	},
+	{
+	  "id": "champagne_yeast",
+	  "name": "Дрожжи для игристых",
+	  "type": "fermentation",
+	  "production_type": "wine",
+	  "description": "Специальные дрожжи для игристых вин.",
+	  "quality_prices": [25, 30, 35, 40],
+	  "starting_count": 0,
+	  "sprite": "champagne_yeast"
+	},
+	{
+	  "id": "oak_chips_wine",
+	  "name": "Дубовая щепа для вина",
+	  "type": "aging",
+	  "production_type": "wine",
+	  "description": "Добавляет вину дубовые ноты и сложность.",
+	  "quality_prices": [30, 35, 40, 45],
+	  "starting_count": 0,
+	  "sprite": "oak_chips_wine"
+	},
+	{
+	  "id": "tanin",
+	  "name": "Танины",
+	  "type": "wine_additive",
+	  "production_type": "wine",
+	  "description": "Добавляют вину структуру и вяжущий вкус.",
+	  "quality_prices": [20, 25, 30, 35],
+	  "starting_count": 0,
+	  "sprite": "tanin"
+	},
+	{
+	  "id": "bentonite",
+	  "name": "Бентонит",
+	  "type": "wine_additive",
+	  "production_type": "wine",
+	  "description": "Для осветления вина и стабилизации.",
+	  "quality_prices": [15, 20, 25, 30],
+	  "starting_count": 0,
+	  "sprite": "bentonite"
+	}
+  ]
+}
