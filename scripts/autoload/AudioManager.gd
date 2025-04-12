@@ -61,6 +61,8 @@ var sound_paths: Dictionary = {
 func _ready() -> void:
 	# Создаем основные плееры
 	music_player = create_audio_player()
+	if music_player == null:
+		push_error("AudioManager: не удалось создать музыкальный плеер")
 	ui_player = create_audio_player()
 	gameplay_player = create_audio_player()
 	ambient_player = create_audio_player()
@@ -220,32 +222,40 @@ func set_master_volume(volume: float) -> void:
 
 func set_music_volume(volume: float) -> void:
 	music_volume = clamp(volume, 0.0, 1.0)
-	music_player.volume_db = linear_to_db(music_volume * master_volume)
+	if music_player != null:
+		music_player.volume_db = linear_to_db(music_volume * master_volume)
 
 func set_sfx_volume(volume: float) -> void:
 	sfx_volume = clamp(volume, 0.0, 1.0)
-	gameplay_player.volume_db = linear_to_db(sfx_volume * master_volume)
+	if gameplay_player != null:
+		gameplay_player.volume_db = linear_to_db(sfx_volume * master_volume)
 	
 	for player in gameplay_players_pool:
 		player.volume_db = linear_to_db(sfx_volume * master_volume)
 
 func set_ui_volume(volume: float) -> void:
 	ui_volume = clamp(volume, 0.0, 1.0)
-	ui_player.volume_db = linear_to_db(ui_volume * master_volume)
+	if ui_player != null:
+		ui_player.volume_db = linear_to_db(ui_volume * master_volume)
 	
 	for player in ui_players_pool:
 		player.volume_db = linear_to_db(ui_volume * master_volume)
 
 func set_ambient_volume(volume: float) -> void:
 	ambient_volume = clamp(volume, 0.0, 1.0)
-	ambient_player.volume_db = linear_to_db(ambient_volume * master_volume)
+	if ambient_player != null:
+		ambient_player.volume_db = linear_to_db(ambient_volume * master_volume)
 
 # Обновление громкости всех плееров
 func update_player_volumes() -> void:
-	music_player.volume_db = linear_to_db(music_volume * master_volume)
-	ui_player.volume_db = linear_to_db(ui_volume * master_volume)
-	gameplay_player.volume_db = linear_to_db(sfx_volume * master_volume)
-	ambient_player.volume_db = linear_to_db(ambient_volume * master_volume)
+	if music_player != null:
+		music_player.volume_db = linear_to_db(music_volume * master_volume)
+	if ui_player != null:
+		ui_player.volume_db = linear_to_db(ui_volume * master_volume)
+	if gameplay_player != null:
+		gameplay_player.volume_db = linear_to_db(sfx_volume * master_volume)
+	if ambient_player != null:
+		ambient_player.volume_db = linear_to_db(ambient_volume * master_volume)
 	
 	for player in ui_players_pool:
 		player.volume_db = linear_to_db(ui_volume * master_volume)

@@ -43,12 +43,12 @@ var settings: Dictionary = {
 }
 
 # Ссылки на другие системы
-@onready var config_manager: ConfigManager = $"/root/ConfigManager"
-@onready var time_manager: TimeManager = $"/root/TimeManager"
-@onready var production_manager: ProductionManager = $"/root/ProductionManager"
-@onready var customer_manager: CustomerManager = $"/root/CustomerManager"
-@onready var event_manager: EventManager = $"/root/EventManager"
-@onready var audio_manager: AudioManager = $"/root/AudioManager"
+@onready var config_manager: ConfigManager = $"/root/ConfigM"
+@onready var time_manager: TimeManager = $"/root/TM"
+@onready var production_manager: ProductionManager = $"/root/PM"
+@onready var customer_manager: CustomerManager = $"/root/CM"
+@onready var event_manager: EventManager = $"/root/EM"
+@onready var audio_manager: AudioManager = $"/root/AM"
 
 # Инициализация
 func _ready() -> void:
@@ -197,9 +197,9 @@ func save_game() -> void:
 		"loan_amount": loan_amount,
 		"loan_due_day": loan_due_day,
 		"is_game_over": is_game_over,
-		"inventory": production_manager.get_inventory_data(),
-		"recipes": production_manager.get_recipes_data(),
-		"storage": customer_manager.get_storage_data()
+		"inventory": production_manager.get_save_data()["ingredients"],
+		"recipes": production_manager.get_save_data()["learned_recipes"],
+		#"storage": customer_manager.get_save_data()["ingredients"]
 	}
 	
 	# Сохраняем в файл
