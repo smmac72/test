@@ -9,6 +9,7 @@ signal production_level_changed(production_type, new_level)
 signal loan_taken(amount, due_date)
 signal loan_repaid()
 signal game_over(reason)
+signal game_initialized
 
 # Данные игрока
 var money: int = 500
@@ -32,6 +33,7 @@ var utility_cost: int = 100  # Стоимость коммунальных пл�
 
 # Флаг окончания игры
 var is_game_over: bool = false
+var is_initialized: bool = false
 
 # Сохраняемые настройки
 var settings: Dictionary = {
@@ -39,16 +41,17 @@ var settings: Dictionary = {
 	"music_volume": 0.7,
 	"sfx_volume": 0.8,
 	"ui_volume": 0.5,
-	"ambient_volume": 0.6
+	"ambient_volume": 0.6,
+	"tutorial_completed": false
 }
 
 # Ссылки на другие системы
-@onready var config_manager: ConfigManager = $"/root/ConfigM"
-@onready var time_manager: TimeManager = $"/root/TM"
-@onready var production_manager: ProductionManager = $"/root/PM"
-@onready var customer_manager: CustomerManager = $"/root/CM"
-@onready var event_manager: EventManager = $"/root/EM"
-@onready var audio_manager: AudioManager = $"/root/AM"
+@onready var config_manager: ConfigManager = $"/root/ConfigManager"
+@onready var time_manager: TimeManager = $"/root/TimeManager"
+@onready var production_manager: ProductionManager = $"/root/ProductionManager"
+@onready var customer_manager: CustomerManager = $"/root/CustomerManager"
+@onready var event_manager: EventManager = $"/root/EventManager"
+@onready var audio_manager: AudioManager = $"/root/AudioManager"
 
 # Инициализация
 func _ready() -> void:
@@ -61,6 +64,14 @@ func _ready() -> void:
 	# Применяем настройки звука
 	apply_audio_settings()
 	
+	call_deferred("initialize_game_state")
+
+# Инициализация игрового состояния (после загрузки других менеджеров)
+func initialize_game_state() -> void:
+	# Дожидаемся загрузки конфигураций
+	if not config_manager.is_loaded:
+		await config_manager.configs_loaded
+	
 	# Проверяем, новая ли игра
 	if is_new_game:
 		# Новая игра - сбрасываем все на начальные значения
@@ -68,6 +79,9 @@ func _ready() -> void:
 	else:
 		# Продолжаем игру - загружаем данные
 		initialize_from_save()
+	
+	is_initialized = true
+	emit_signal("game_initialized")
 
 # Сброс игры на начальные значения
 func reset_game() -> void:
@@ -83,6 +97,9 @@ func reset_game() -> void:
 	loan_due_day = 0
 	is_game_over = false
 	is_new_game = false
+	
+	# Инициализируем менеджеры с начальными данными
+	production_manager.initialize_with_levels(production_levels)
 	
 	# Сохраняем начальное состояние
 	save_game()
@@ -154,12 +171,16 @@ func load_from_dictionary(data: Dictionary) -> void:
 	var inventory_data = data.get("inventory", {})
 	var recipes_data = data.get("recipes", {})
 	var storage_data = data.get("storage", {})
+	var reputation_data = data.get("reputation", 50.0)
+	var time_data = data.get("time", {})
 	
 	# Сохраняем данные для последующей инициализации
 	save_data = {
 		"inventory": inventory_data,
 		"recipes": recipes_data,
-		"storage": storage_data
+		"storage": storage_data,
+		"reputation": reputation_data,
+		"time": time_data
 	}
 
 # Временное хранилище для данных сохранения
@@ -168,6 +189,8 @@ var save_data: Dictionary = {}
 # Инициализация из сохранения
 func initialize_from_save() -> void:
 	# Инициализируем менеджеры с загруженными данными
+	production_manager.initialize_with_levels(production_levels)
+	
 	if "inventory" in save_data:
 		production_manager.load_inventory(save_data["inventory"])
 	
@@ -176,6 +199,12 @@ func initialize_from_save() -> void:
 	
 	if "storage" in save_data:
 		customer_manager.load_storage(save_data["storage"])
+	
+	if "reputation" in save_data:
+		customer_manager.reputation = save_data["reputation"]
+	
+	if "time" in save_data:
+		time_manager.load_time_data(save_data["time"])
 	
 	# Очищаем временное хранилище
 	save_data.clear()
@@ -189,6 +218,10 @@ func initialize_from_save() -> void:
 
 # Сохранение игры
 func save_game() -> void:
+	# Если система не инициализирована, выходим
+	if not is_initialized:
+		return
+		
 	# Собираем данные для сохранения
 	var save_data = {
 		"money": money,
@@ -197,9 +230,11 @@ func save_game() -> void:
 		"loan_amount": loan_amount,
 		"loan_due_day": loan_due_day,
 		"is_game_over": is_game_over,
-		"inventory": production_manager.get_save_data()["ingredients"],
-		"recipes": production_manager.get_save_data()["learned_recipes"],
-		#"storage": customer_manager.get_save_data()["ingredients"]
+		"inventory": production_manager.get_inventory_data(),
+		"recipes": production_manager.get_recipes_data(),
+		"storage": customer_manager.get_storage_data(),
+		"reputation": customer_manager.reputation,
+		"time": time_manager.get_time_data()
 	}
 	
 	# Сохраняем в файл
@@ -234,10 +269,14 @@ func change_money(amount: int, reason: String = "") -> void:
 	emit_signal("money_changed", money, amount, reason)
 	
 	# Воспроизводим звук в зависимости от типа изменения
-	if amount > 0:
-		audio_manager.play_sound("money_gain", AudioManager.SoundType.UI)
-	elif amount < 0:
-		audio_manager.play_sound("money_loss", AudioManager.SoundType.UI)
+	if audio_manager:
+		if amount > 0:
+			audio_manager.play_sound("money_gain", AudioManager.SoundType.UI)
+		elif amount < 0:
+			audio_manager.play_sound("money_loss", AudioManager.SoundType.UI)
+	
+	# Автоматически сохраняем игру при изменении денег
+	call_deferred("save_game")
 
 # Обработка нового дня
 func handle_new_day(day: int) -> void:
@@ -321,8 +360,11 @@ func purchase_upgrade(production_type: String, level: int) -> bool:
 	# Обновляем уровень производства
 	production_levels[production_type] = level
 	
+	# Разблокируем новый контент
+	production_manager.unlock_production_level(production_type, level)
+	
 	# Отправляем сигнал об изменении
-	emit_signal("production_level_changed", production_type, level)
+	emit_signal("production_level_changed", type, level)
 	
 	# Сохраняем игру
 	save_game()

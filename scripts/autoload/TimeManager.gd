@@ -35,6 +35,7 @@ var time_timer: Timer
 # Ссылки на другие системы
 @onready var game_manager: GameManager = $"/root/GameManager"
 @onready var event_manager: EventManager = $"/root/EventManager"
+@onready var audio_manager: AudioManager = $"/root/AudioManager"
 
 # Инициализация
 func _ready() -> void:
@@ -44,6 +45,9 @@ func _ready() -> void:
 	time_timer.wait_time = 1.0  # 1 секунда
 	time_timer.connect("timeout", _on_timer_timeout)
 	time_timer.autostart = true
+	
+	# Инициализируем время суток
+	_update_time_of_day()
 
 # Обработчик таймера
 func _on_timer_timeout() -> void:
@@ -100,6 +104,10 @@ func advance_time(minutes: float) -> void:
 		# Проверяем, изменилось ли время суток
 		if current_time_of_day != old_time_of_day:
 			emit_signal("time_of_day_changed", time_of_day_name)
+			
+			# Воспроизведение звука времени суток
+			if audio_manager:
+				audio_manager.play_ambient_for_time_of_day(time_of_day_name)
 	
 	# Проверяем, прошел ли день
 	if game_date["day"] != old_day:
@@ -224,3 +232,36 @@ func get_season() -> String:
 			return "fall"
 	
 	return "unknown"
+
+# Получение данных времени для сохранения
+func get_time_data() -> Dictionary:
+	return {
+		"game_time": game_time,
+		"game_date": game_date,
+		"time_of_day": time_of_day_name,
+		"time_scale": time_scale,
+		"paused": paused
+	}
+
+# Загрузка данных времени из сохранения
+func load_time_data(data: Dictionary) -> void:
+	if "game_time" in data:
+		game_time = data["game_time"]
+	
+	if "game_date" in data:
+		game_date = data["game_date"]
+	
+	if "time_of_day" in data:
+		time_of_day_name = data["time_of_day"]
+		# Обновляем enum на основе имени
+		match time_of_day_name:
+			"morning": current_time_of_day = TimeOfDay.MORNING
+			"day": current_time_of_day = TimeOfDay.DAY
+			"evening": current_time_of_day = TimeOfDay.EVENING
+			"night": current_time_of_day = TimeOfDay.NIGHT
+	
+	if "time_scale" in data:
+		time_scale = data["time_scale"]
+	
+	if "paused" in data:
+		paused = data["paused"]

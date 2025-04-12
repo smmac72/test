@@ -26,6 +26,7 @@ var result_quality: int = 0
 
 # Ссылки на другие системы
 @onready var production_manager: ProductionManager = $"/root/ProductionManager"
+@onready var audio_manager: AudioManager = $"/root/AudioManager"
 
 # Инициализация инструмента
 func _ready() -> void:
@@ -75,7 +76,13 @@ func initialize_slots() -> void:
 	
 	# Создаем новые слоты согласно конфигурации
 	if tool_data:
-		for slot_config in tool_data.slots:
+		# Вычисляем расположение слотов вокруг центра инструмента
+		var radius = 50  # Радиус размещения слотов
+		var slot_count = tool_data.slots.size()
+		var angle_step = 2 * PI / slot_count if slot_count > 0 else 0
+		
+		for i in range(slot_count):
+			var slot_config = tool_data.slots[i]
 			var slot_id = slot_config.get("id", "")
 			slots[slot_id] = null
 			
@@ -85,8 +92,16 @@ func initialize_slots() -> void:
 			slot.slot_type = slot_config.get("type", "")
 			slot.required = slot_config.get("required", true)
 			slot.display_name = slot_config.get("display_name", "")
+			
+			# Устанавливаем позицию слота
+			var angle = i * angle_step
+			var offset = Vector2(cos(angle), sin(angle)) * radius
+			slot.position = offset
+			
+			# Подключаем сигналы слота
 			slot.connect("item_dropped", _on_item_dropped_to_slot)
 			slot.connect("item_removed", _on_item_removed_from_slot)
+			
 			slots_container.add_child(slot)
 
 # Обновление визуального представления инструмента
@@ -118,6 +133,10 @@ func get_slot_node(slot_id: String) -> Node:
 func can_accept_item(slot_id: String, item_data) -> bool:
 	# Проверка наличия слота
 	if not slot_id in slots:
+		return false
+	
+	# Если идет обработка, нельзя менять ингредиенты
+	if is_processing:
 		return false
 	
 	# Проверка занятости слота
@@ -161,11 +180,21 @@ func add_item_to_slot(slot_id: String, item_data) -> bool:
 	
 	emit_signal("slot_content_changed", slot_id, item_id)
 	
+	# Проверяем, можно ли запустить процесс
+	if can_start_processing():
+		# Воспроизводим звук для индикации готовности
+		if audio_manager:
+			audio_manager.play_sound("item_place", AudioManager.SoundType.GAMEPLAY)
+	
 	return true
 
 # Удаление предмета из слота
 func remove_item_from_slot(slot_id: String) -> Variant:
 	if not slot_id in slots or slots[slot_id] == null:
+		return null
+	
+	# Если идет обработка, нельзя удалять ингредиенты
+	if is_processing:
 		return null
 	
 	var item = slots[slot_id]
@@ -220,18 +249,23 @@ func find_matching_recipe() -> String:
 		
 		# Проверяем совпадение ингредиентов
 		var recipe_ingredients = product.ingredients
+		
+		# Если количество ингредиентов не совпадает, пропускаем
 		if recipe_ingredients.size() != ingredients.size():
 			continue
 		
 		# Проверяем, все ли ингредиенты из рецепта присутствуют
-		var all_match = true
+		var missing_ingredient = false
 		for ingredient_id in recipe_ingredients:
 			if not ingredient_id in ingredients:
-				all_match = false
+				missing_ingredient = true
 				break
 		
-		if all_match:
-			return recipe_id
+		if missing_ingredient:
+			continue
+		
+		# Найден подходящий рецепт
+		return recipe_id
 	
 	return ""
 
@@ -276,6 +310,10 @@ func start_processing() -> bool:
 	# Отправляем сигнал о начале обработки
 	emit_signal("processing_started", tool_id)
 	
+	# Воспроизводим звук начала обработки
+	if audio_manager:
+		audio_manager.play_sound("production_start", AudioManager.SoundType.GAMEPLAY)
+	
 	return true
 
 # Обработка тика для обновления прогресс-бара
@@ -302,38 +340,64 @@ func complete_processing() -> void:
 	# Сбрасываем флаг обработки
 	is_processing = false
 	
-	# Очищаем слоты
+	# Проверяем результат
+	if result_product_id.is_empty():
+		push_error("ToolInstance: не указан ID продукта для завершения обработки")
+		return
+	
+	# Воспроизводим звук завершения обработки
+	if audio_manager:
+		audio_manager.play_sound("production_complete", AudioManager.SoundType.GAMEPLAY)
+	
+	# Отправляем сигнал о завершении обработки
+	emit_signal("processing_completed", tool_id, result_product_id, result_quality)
+	
+	# Уведомляем менеджер производства
+	production_manager._on_crafting_completed(result_product_id, result_quality)
+	
+	# Очищаем слоты ПОСЛЕ завершения обработки и отправки сигналов
 	for slot_id in slots:
 		slots[slot_id] = null
 		var slot_node = get_slot_node(slot_id)
 		if slot_node:
 			slot_node.update_visual(null)
 	
-	# Отправляем сигнал о завершении обработки
-	emit_signal("processing_completed", tool_id, result_product_id, result_quality)
-	
 	# Сбрасываем данные обработки
+	var completed_product_id = result_product_id
 	result_product_id = ""
 	result_quality = 0
 	processing_time = 0
-	
-	# Уведомляем менеджер производства
-	production_manager._on_crafting_completed(result_product_id, result_quality)
 
 # Обработчик события перетаскивания предмета в слот
 func _on_item_dropped_to_slot(slot_id: String, item_data) -> void:
 	add_item_to_slot(slot_id, item_data)
+	
+	# Если все слоты заполнены, проверяем возможность автоматического запуска
+	if can_start_processing():
+		# Запускаем процесс с небольшой задержкой для визуального эффекта
+		await get_tree().create_timer(0.5).timeout
+		start_processing()
 
 # Обработчик события удаления предмета из слота
 func _on_item_removed_from_slot(slot_id: String) -> void:
 	remove_item_from_slot(slot_id)
 
+# Метод для обработки внешнего сброса предмета на инструмент
+func handle_item_drop(item_data) -> bool:
+	# Перебираем все слоты и ищем подходящий
+	for slot_id in slots:
+		if can_accept_item(slot_id, item_data):
+			# Добавляем предмет в подходящий слот
+			return add_item_to_slot(slot_id, item_data)
+	
+	return false
+
 # Получение информации для отображения в UI
 func get_info() -> Dictionary:
 	var result = {
-		"name": tool_data.name,
-		"description": tool_data.description,
-		"quality": tool_data.quality,
+		"name": tool_data.name if tool_data else "Неизвестный инструмент",
+		"description": tool_data.description if tool_data else "",
+		"quality": tool_data.quality if tool_data else 0,
 		"is_processing": is_processing,
 		"slots": []
 	}
@@ -355,7 +419,8 @@ func get_info() -> Dictionary:
 		result["progress"] = {
 			"current": progress_bar.value,
 			"total": processing_time,
-			"time_left": timer.time_left
+			"time_left": timer.time_left,
+			"product_id": result_product_id
 		}
 	
 	return result

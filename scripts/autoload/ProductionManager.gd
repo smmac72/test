@@ -17,15 +17,13 @@ var learned_recipes: Dictionary = {}        # id -> bool
 # Ссылки на другие системы
 @onready var config_manager: ConfigManager = $"/root/ConfigManager"
 @onready var game_manager: GameManager = $"/root/GameManager"
+@onready var audio_manager: AudioManager = $"/root/AudioManager"
 
 # Инициализация системы производства
 func _ready() -> void:
 	# Дожидаемся загрузки конфигураций
 	if not config_manager.is_loaded:
 		await config_manager.configs_loaded
-	
-	# Подключаем сигналы
-	game_manager.connect("production_level_changed", _on_production_level_changed)
 
 # Инициализация с учетом текущих уровней производства
 func initialize_with_levels(production_levels: Dictionary) -> void:
@@ -85,26 +83,40 @@ func load_common_ingredients() -> void:
 func unlock_production_level(production_type: String, level: int) -> void:
 	load_production_content(production_type, level)
 
-# Обработчик сигнала изменения уровня производства
-func _on_production_level_changed(production_type: String, new_level: int) -> void:
-	load_production_content(production_type, new_level)
-
 # Получение данных об ингредиенте по ID
 func get_ingredient(ingredient_id: String) -> IngredientData:
+	if ingredient_id.is_empty():
+		push_warning("ProductionManager: запрос ингредиента с пустым ID")
+		return null
+	
 	if ingredient_id in available_ingredients:
 		return available_ingredients[ingredient_id]
+	
+	push_warning("ProductionManager: ингредиент с ID '" + ingredient_id + "' не найден")
 	return null
 
 # Получение данных об инструменте по ID
 func get_tool(tool_id: String) -> ToolData:
+	if tool_id.is_empty():
+		push_warning("ProductionManager: запрос инструмента с пустым ID")
+		return null
+	
 	if tool_id in available_tools:
 		return available_tools[tool_id]
+	
+	push_warning("ProductionManager: инструмент с ID '" + tool_id + "' не найден")
 	return null
 
 # Получение данных о продукте по ID
 func get_product(product_id: String) -> ProductData:
+	if product_id.is_empty():
+		push_warning("ProductionManager: запрос продукта с пустым ID")
+		return null
+	
 	if product_id in available_products:
 		return available_products[product_id]
+	
+	push_warning("ProductionManager: продукт с ID '" + product_id + "' не найден")
 	return null
 
 # Проверка наличия ингредиентов для рецепта
@@ -155,6 +167,7 @@ func start_crafting(tool_instance_id: String, recipe_id: String) -> bool:
 				"quality": ingredient.quality,
 				"count": 1  # По одному для каждого типа
 			}
+			
 			# Уменьшаем количество ингредиента
 			ingredient.count -= 1
 			emit_signal("product_count_changed", ingredient_id, ingredient.count, true)
@@ -164,6 +177,7 @@ func start_crafting(tool_instance_id: String, recipe_id: String) -> bool:
 				"quality": ingredient_product.quality,
 				"count": 1  # По одному для каждого типа
 			}
+			
 			# Уменьшаем количество промежуточного продукта
 			ingredient_product.count -= 1
 			emit_signal("product_count_changed", ingredient_id, ingredient_product.count, false)
@@ -180,6 +194,7 @@ func start_crafting(tool_instance_id: String, recipe_id: String) -> bool:
 			recipe_id,
 			result_quality
 		)
+		
 		# Запускаем процесс
 		tool_instance.start_processing()
 		return true
@@ -198,6 +213,10 @@ func get_tool_instance_by_id(instance_id: String) -> ToolInstance:
 
 # Обработчик завершения крафта
 func _on_crafting_completed(recipe_id: String, quality: int) -> void:
+	if recipe_id.is_empty():
+		push_warning("ProductionManager: завершение крафта с пустым ID рецепта")
+		return
+	
 	if recipe_id in available_products:
 		var product = available_products[recipe_id]
 		
@@ -213,9 +232,15 @@ func _on_crafting_completed(recipe_id: String, quality: int) -> void:
 			learned_recipes[recipe_id] = true
 			emit_signal("recipe_learned", recipe_id)
 		
+		# Воспроизводим звук завершения крафта
+		if audio_manager:
+			audio_manager.play_sound("production_complete", AudioManager.SoundType.GAMEPLAY)
+		
 		# Оповещаем о создании продукта
 		emit_signal("recipe_completed", recipe_id, quality)
 		emit_signal("product_count_changed", recipe_id, product.count, false)
+	else:
+		push_warning("ProductionManager: продукт с ID '" + recipe_id + "' не найден при завершении крафта")
 
 # Расчет качества результата на основе качества ингредиентов и инструмента
 func calculate_result_quality(tool: ToolData, ingredients: Dictionary, product: ProductData) -> int:
@@ -281,6 +306,10 @@ func improve_ingredient(ingredient_id: String) -> bool:
 	# Отправляем сигнал об улучшении
 	emit_signal("product_quality_improved", ingredient_id, ingredient.quality)
 	
+	# Воспроизводим звук улучшения
+	if audio_manager:
+		audio_manager.play_sound("money_loss", AudioManager.SoundType.UI)
+	
 	return true
 
 # Улучшение качества инструмента
@@ -310,10 +339,17 @@ func improve_tool(tool_id: String) -> bool:
 	# Отправляем сигнал об улучшении
 	emit_signal("tool_quality_improved", tool_id, tool.quality)
 	
+	# Воспроизводим звук улучшения
+	if audio_manager:
+		audio_manager.play_sound("money_loss", AudioManager.SoundType.UI)
+	
 	return true
 
 # Покупка ингредиента
 func buy_ingredient(ingredient_id: String, amount: int = 1) -> bool:
+	if amount <= 0:
+		return false
+		
 	if not ingredient_id in available_ingredients:
 		return false
 	
@@ -332,6 +368,10 @@ func buy_ingredient(ingredient_id: String, amount: int = 1) -> bool:
 	
 	# Отправляем сигнал об изменении количества
 	emit_signal("product_count_changed", ingredient_id, ingredient.count, true)
+	
+	# Воспроизводим звук покупки
+	if audio_manager:
+		audio_manager.play_sound("money_loss", AudioManager.SoundType.UI)
 	
 	return true
 
