@@ -52,17 +52,24 @@ var settings: Dictionary = {
 @onready var customer_manager: CustomerManager = $"/root/CustomerManager"
 @onready var event_manager: EventManager = $"/root/EventManager"
 @onready var audio_manager: AudioManager = $"/root/AudioManager"
+@onready var save_manager: SaveManager = $"/root/SaveManager"
 
 # Инициализация
 func _ready() -> void:
-	# Загружаем сохранение, если есть
-	load_save_game()
+	# Регистрируем систему в SaveManager
+	if save_manager:
+		save_manager.register_system("game", self)
+		save_manager.connect("load_completed", _on_save_load_completed)
 	
 	# Загружаем настройки
 	load_settings()
 	
 	# Применяем настройки звука
 	apply_audio_settings()
+	
+	# Проверяем наличие сохранения
+	if save_manager and save_manager.has_save():
+		is_new_game = false
 	
 	call_deferred("initialize_game_state")
 
@@ -77,11 +84,24 @@ func initialize_game_state() -> void:
 		# Новая игра - сбрасываем все на начальные значения
 		reset_game()
 	else:
-		# Продолжаем игру - загружаем данные
-		initialize_from_save()
+		# Продолжаем игру - загружаем сохранение
+		if save_manager:
+			save_manager.load_game()
+		else:
+			# Запасной вариант если SaveManager не доступен
+			reset_game()
 	
 	is_initialized = true
 	emit_signal("game_initialized")
+
+# Обработчик завершения загрузки сохранения
+func _on_save_load_completed() -> void:
+	# Обновляем UI
+	emit_signal("money_changed", money, 0, "Загрузка")
+	emit_signal("day_changed", game_day)
+	
+	for type in production_levels:
+		emit_signal("production_level_changed", type, production_levels[type])
 
 # Сброс игры на начальные значения
 func reset_game() -> void:
@@ -98,161 +118,42 @@ func reset_game() -> void:
 	is_game_over = false
 	is_new_game = false
 	
-	# Инициализируем менеджеры с начальными данными
-	production_manager.initialize_with_levels(production_levels)
-	
 	# Сохраняем начальное состояние
-	save_game()
+	if save_manager:
+		save_manager.save_game()
 
-# Загрузка игры из сохранения
-func load_save_game() -> void:
-	var save_path = "user://samogon_save.json"
-	
-	# Проверяем наличие файла сохранения
-	if not FileAccess.file_exists(save_path):
-		# Проверяем веб-сохранение
-		if OS.has_feature("web") and Engine.has_singleton("JavaScript"):
-			var JavaScript = Engine.get_singleton("JavaScript")
-			var json_str = JavaScript.eval("""
-			try {
-				return localStorage.getItem('samogon_save') || '';
-			} catch (e) {
-				console.error('Failed to load from localStorage:', e);
-				return '';
-			}
-			""")
-			
-			if json_str and json_str != "":
-				var json = JSON.new()
-				var error = json.parse(json_str)
-				if error == OK:
-					var data = json.get_data()
-					if typeof(data) == TYPE_DICTIONARY:
-						load_from_dictionary(data)
-						is_new_game = false
-						return
-		
-		# Если нет сохранения, это новая игра
-		is_new_game = true
-		return
-	
-	# Загружаем данные из файла
-	var file = FileAccess.open(save_path, FileAccess.READ)
-	var json_str = file.get_as_text()
-	file.close()
-	
-	var json = JSON.new()
-	var error = json.parse(json_str)
-	if error == OK:
-		var data = json.get_data()
-		if typeof(data) == TYPE_DICTIONARY:
-			load_from_dictionary(data)
-			is_new_game = false
-	else:
-		push_error("Ошибка загрузки сохранения: " + json.get_error_message())
-		is_new_game = true
-
-# Загрузка данных из словаря
-func load_from_dictionary(data: Dictionary) -> void:
-	# Загружаем основные данные
-	money = data.get("money", 500)
-	game_day = data.get("game_day", 1)
-	production_levels = data.get("production_levels", {
-		"samogon": 1,
-		"beer": 0,
-		"wine": 0,
-		"garage": 1
-	})
-	loan_amount = data.get("loan_amount", 0)
-	loan_due_day = data.get("loan_due_day", 0)
-	is_game_over = data.get("is_game_over", false)
-	
-	# Загружаем данные инвентаря, если они есть
-	var inventory_data = data.get("inventory", {})
-	var recipes_data = data.get("recipes", {})
-	var storage_data = data.get("storage", {})
-	var reputation_data = data.get("reputation", 50.0)
-	var time_data = data.get("time", {})
-	
-	# Сохраняем данные для последующей инициализации
-	save_data = {
-		"inventory": inventory_data,
-		"recipes": recipes_data,
-		"storage": storage_data,
-		"reputation": reputation_data,
-		"time": time_data
-	}
-
-# Временное хранилище для данных сохранения
-var save_data: Dictionary = {}
-
-# Инициализация из сохранения
-func initialize_from_save() -> void:
-	# Инициализируем менеджеры с загруженными данными
-	production_manager.initialize_with_levels(production_levels)
-	
-	if "inventory" in save_data:
-		production_manager.load_inventory(save_data["inventory"])
-	
-	if "recipes" in save_data:
-		production_manager.load_recipes(save_data["recipes"])
-	
-	if "storage" in save_data:
-		customer_manager.load_storage(save_data["storage"])
-	
-	if "reputation" in save_data:
-		customer_manager.reputation = save_data["reputation"]
-	
-	if "time" in save_data:
-		time_manager.load_time_data(save_data["time"])
-	
-	# Очищаем временное хранилище
-	save_data.clear()
-	
-	# Отправляем сигналы для обновления UI
-	emit_signal("money_changed", money, 0, "Загрузка")
-	emit_signal("day_changed", game_day)
-	
-	for type in production_levels:
-		emit_signal("production_level_changed", type, production_levels[type])
-
-# Сохранение игры
-func save_game() -> void:
-	# Если система не инициализирована, выходим
-	if not is_initialized:
-		return
-		
-	# Собираем данные для сохранения
-	var save_data = {
+# Интерфейс для SaveManager - получение данных для сохранения
+func get_save_data() -> Dictionary:
+	return {
 		"money": money,
 		"game_day": game_day,
 		"production_levels": production_levels,
 		"loan_amount": loan_amount,
 		"loan_due_day": loan_due_day,
-		"is_game_over": is_game_over,
-		"inventory": production_manager.get_inventory_data(),
-		"recipes": production_manager.get_recipes_data(),
-		"storage": customer_manager.get_storage_data(),
-		"reputation": customer_manager.reputation,
-		"time": time_manager.get_time_data()
+		"is_game_over": is_game_over
 	}
+
+# Интерфейс для SaveManager - загрузка данных из сохранения
+func load_save_data(data: Dictionary) -> void:
+	# Загружаем основные данные
+	money = data.get("money", 500)
+	game_day = data.get("game_day", 1)
 	
-	# Сохраняем в файл
-	var save_path = "user://samogon_save.json"
-	var file = FileAccess.open(save_path, FileAccess.WRITE)
-	file.store_string(JSON.stringify(save_data, "  "))
-	file.close()
+	# Загружаем уровни производства
+	if "production_levels" in data:
+		production_levels = data.get("production_levels", {
+			"samogon": 1,
+			"beer": 0,
+			"wine": 0,
+			"garage": 1
+		})
 	
-	# Для веб-версии также сохраняем в localStorage
-	if OS.has_feature("web") and Engine.has_singleton("JavaScript"):
-		var JavaScript = Engine.get_singleton("JavaScript")
-		JavaScript.eval("""
-		try {
-			localStorage.setItem('samogon_save', JSON.stringify(%s));
-		} catch (e) {
-			console.error('Failed to save to localStorage:', e);
-		}
-		""" % JSON.stringify(save_data))
+	# Загружаем данные займа
+	loan_amount = data.get("loan_amount", 0)
+	loan_due_day = data.get("loan_due_day", 0)
+	is_game_over = data.get("is_game_over", false)
+	
+	print("GameManager: Загрузка сохранения завершена")
 
 # Изменение количества денег
 func change_money(amount: int, reason: String = "") -> void:
@@ -276,7 +177,8 @@ func change_money(amount: int, reason: String = "") -> void:
 			audio_manager.play_sound("money_loss", AudioManager.SoundType.UI)
 	
 	# Автоматически сохраняем игру при изменении денег
-	call_deferred("save_game")
+	if save_manager:
+		save_manager.save_game()
 
 # Обработка нового дня
 func handle_new_day(day: int) -> void:
@@ -289,7 +191,8 @@ func handle_new_day(day: int) -> void:
 	check_loan_status()
 	
 	# Сохраняем прогресс
-	save_game()
+	if save_manager:
+		save_manager.save_game()
 
 # Проверка состояния займа
 func check_loan_status() -> void:
@@ -364,10 +267,11 @@ func purchase_upgrade(production_type: String, level: int) -> bool:
 	production_manager.unlock_production_level(production_type, level)
 	
 	# Отправляем сигнал об изменении
-	emit_signal("production_level_changed", type, level)
+	emit_signal("production_level_changed", production_type, level)
 	
 	# Сохраняем игру
-	save_game()
+	if save_manager:
+		save_manager.save_game()
 	
 	return true
 
@@ -393,8 +297,12 @@ func trigger_game_over(reason: String) -> void:
 
 # Начало новой игры
 func start_new_game() -> void:
-	# Сбрасываем игру
-	reset_game()
+	# Удаляем существующее сохранение
+	if save_manager:
+		save_manager.delete_save()
+	
+	# Устанавливаем флаг новой игры
+	is_new_game = true
 	
 	# Перезагружаем основную сцену
 	get_tree().change_scene_to_file("res://scenes/global/MainScene.tscn")

@@ -7,6 +7,7 @@ signal product_count_changed(product_id: String, new_count: int, is_ingredient: 
 signal product_quality_improved(product_id: String, new_quality: int)
 signal tool_quality_improved(tool_id: String, new_quality: int)
 signal recipe_learned(recipe_id: String)
+signal production_initialized
 
 # Данные о доступных предметах
 var available_ingredients: Dictionary = {}  # id -> IngredientData
@@ -14,16 +15,38 @@ var available_tools: Dictionary = {}        # id -> ToolData
 var available_products: Dictionary = {}     # id -> ProductData
 var learned_recipes: Dictionary = {}        # id -> bool
 
+# Флаги состояния
+var _is_initialized: bool = false
+
 # Ссылки на другие системы
 @onready var config_manager: ConfigManager = $"/root/ConfigManager"
 @onready var game_manager: GameManager = $"/root/GameManager"
 @onready var audio_manager: AudioManager = $"/root/AudioManager"
+@onready var save_manager: SaveManager = $"/root/SaveManager"
 
 # Инициализация системы производства
 func _ready() -> void:
+	# Регистрируем систему в SaveManager
+	if save_manager:
+		save_manager.register_system("production", self)
+	
 	# Дожидаемся загрузки конфигураций
 	if not config_manager.is_loaded:
 		await config_manager.configs_loaded
+
+	# Подключаем сигналы
+	if game_manager:
+		game_manager.connect("game_initialized", _on_game_initialized)
+
+# Обработчик инициализации игры
+func _on_game_initialized() -> void:
+	# Не выполняем инициализацию дважды
+	if _is_initialized:
+		return
+	
+	_is_initialized = true
+	initialize_with_levels(game_manager.production_levels)
+	emit_signal("production_initialized")
 
 # Инициализация с учетом текущих уровней производства
 func initialize_with_levels(production_levels: Dictionary) -> void:
@@ -410,7 +433,7 @@ func get_products_by_type(production_type: String, only_final: bool = false) -> 
 	
 	return result
 
-# Получение данных для сохранения
+# Интерфейс для SaveManager - получение данных для сохранения
 func get_save_data() -> Dictionary:
 	var ingredients_data = {}
 	var tools_data = {}
@@ -443,24 +466,30 @@ func get_save_data() -> Dictionary:
 		"learned_recipes": learned_recipes
 	}
 
-# Загрузка данных из сохранения
+# Интерфейс для SaveManager - загрузка данных из сохранения
 func load_save_data(data: Dictionary) -> void:
+	# Восстанавливаем данные ингредиентов
 	if "ingredients" in data:
 		for id in data.ingredients:
 			if id in available_ingredients:
 				available_ingredients[id].count = data.ingredients[id].get("count", 0)
 				available_ingredients[id].quality = data.ingredients[id].get("quality", 0)
 	
+	# Восстанавливаем данные инструментов
 	if "tools" in data:
 		for id in data.tools:
 			if id in available_tools:
 				available_tools[id].quality = data.tools[id].get("quality", 0)
 	
+	# Восстанавливаем данные продуктов
 	if "products" in data:
 		for id in data.products:
 			if id in available_products:
 				available_products[id].count = data.products[id].get("count", 0)
 				available_products[id].quality = data.products[id].get("quality", 0)
 	
+	# Восстанавливаем изученные рецепты
 	if "learned_recipes" in data:
 		learned_recipes = data.learned_recipes.duplicate()
+
+	print("ProductionManager: Загрузка сохранения завершена")

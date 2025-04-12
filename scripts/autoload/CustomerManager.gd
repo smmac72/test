@@ -28,13 +28,21 @@ var spawn_paused: bool = false
 # Репутация
 var reputation: float = 50.0  # 0-100
 
+# Хранение продуктов для продажи
+var storage_products: Dictionary = {}  # product_id_quality -> {count, price_modifier}
+
 # Ссылки на другие системы
 @onready var config_manager: ConfigManager = $"/root/ConfigManager"
 @onready var game_manager: GameManager = $"/root/GameManager"
 @onready var production_manager: ProductionManager = $"/root/ProductionManager"
+@onready var save_manager: SaveManager = $"/root/SaveManager"
 
 # Инициализация
 func _ready() -> void:
+	# Регистрируем систему в SaveManager
+	if save_manager:
+		save_manager.register_system("customer", self)
+	
 	# Создаем таймер генерации клиентов
 	customer_spawn_timer = Timer.new()
 	add_child(customer_spawn_timer)
@@ -493,6 +501,10 @@ func change_reputation(amount: float, reason: String = "") -> void:
 	
 	# Обновляем таймер появления клиентов
 	_update_spawn_timer()
+	
+	# Сохраняем игру при значительных изменениях репутации
+	if abs(amount) >= 1.0 and save_manager:
+		save_manager.save_game()
 
 # Добавление клиента в очередь
 func add_to_queue(customer_data: Dictionary) -> void:
@@ -554,10 +566,72 @@ func _day_time_to_hour_range(time_of_day: String) -> Array:
 			return [0, 5]
 	return [0, 23]  # весь день по умолчанию
 
-# Получение данных для сохранения
-func get_storage_data() -> Dictionary:
-	return {}  # Пока нет данных для сохранения
+# Добавление продукта на склад
+func add_product_to_storage(product_id: String, quality: int, count: int = 1, price_modifier: float = 1.0) -> void:
+	var key = product_id + "_" + str(quality)
+	
+	if key in storage_products:
+		storage_products[key]["count"] += count
+	else:
+		storage_products[key] = {
+			"count": count,
+			"price_modifier": price_modifier
+		}
 
-# Восстановление данных из сохранения
-func restore_storage(data: Dictionary) -> void:
-	pass  # Пока нет данных для восстановления
+# Получение данных продукта со склада
+func get_storage_product(product_id: String, quality: int) -> Dictionary:
+	var key = product_id + "_" + str(quality)
+	
+	if key in storage_products:
+		return storage_products[key]
+	
+	return {}
+
+# Удаление продукта со склада
+func remove_product_from_storage(product_id: String, quality: int, count: int = 1) -> bool:
+	var key = product_id + "_" + str(quality)
+	
+	if key in storage_products:
+		storage_products[key]["count"] -= count
+		
+		if storage_products[key]["count"] <= 0:
+			# Удаляем продукт, если количество стало 0 или меньше
+			storage_products.erase(key)
+		
+		return true
+	
+	return false
+
+# Обновление модификатора цены продукта
+func update_product_price_modifier(product_id: String, quality: int, new_modifier: float) -> bool:
+	var key = product_id + "_" + str(quality)
+	
+	if key in storage_products:
+		storage_products[key]["price_modifier"] = new_modifier
+		return true
+	
+	return false
+
+# Интерфейс для SaveManager - получение данных для сохранения
+func get_save_data() -> Dictionary:
+	return {
+		"reputation": reputation,
+		"storage_products": storage_products,
+		"day_time": day_time,
+		"current_day": current_day
+	}
+
+# Интерфейс для SaveManager - загрузка данных из сохранения
+func load_save_data(data: Dictionary) -> void:
+	reputation = data.get("reputation", 50.0)
+	
+	if "storage_products" in data:
+		storage_products = data.get("storage_products", {})
+	
+	if "day_time" in data:
+		day_time = data.get("day_time", "morning")
+	
+	if "current_day" in data:
+		current_day = data.get("current_day", 1)
+	
+	print("CustomerManager: Загрузка сохранения завершена")
