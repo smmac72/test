@@ -19,10 +19,10 @@ var learned_recipes: Dictionary = {}        # id -> bool
 var _is_initialized: bool = false
 
 # Ссылки на другие системы
-@onready var config_manager: ConfigManager = $"/root/ConfigManager"
-@onready var game_manager: GameManager = $"/root/GameManager"
-@onready var audio_manager: AudioManager = $"/root/AudioManager"
-@onready var save_manager: SaveManager = $"/root/SaveManager"
+@onready var config_manager: ConfigManager = $"/root/ConfigM"
+@onready var game_manager: GameManager = $"/root/GM"
+@onready var audio_manager: AudioManager = $"/root/AM"
+@onready var save_manager: SaveManager = $"/root/SM"
 
 # Инициализация системы производства
 func _ready() -> void:

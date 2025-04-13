@@ -16,7 +16,7 @@ var count: int = 0
 var price_modifier: float = 1.0
 
 # Компоненты
-@onready var background: Panel = $Background
+@onready var background: TextureRect = $Background
 @onready var product_icon: TextureRect = $ProductIcon
 @onready var quality_stars: HBoxContainer = $QualityStars
 @onready var count_label: Label = $CountLabel

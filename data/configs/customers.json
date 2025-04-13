@@ -1,182 +1,379 @@
-class_name TutorialSystem
-extends CanvasLayer
-
-# Сигналы
-signal tutorial_completed
-signal tutorial_step_changed(step)
-
-# Компоненты UI
-@onready var highlight_rect: ColorRect = $HighlightRect
-@onready var tutorial_panel: Panel = $TutorialPanel
-@onready var title_label: Label = $TutorialPanel/TitleLabel
-@onready var description_label: Label = $TutorialPanel/DescriptionLabel
-@onready var next_button: Button = $TutorialPanel/NextButton
-@onready var skip_button: Button = $TutorialPanel/SkipButton
-
-# Шаги туториала
-var tutorial_steps: Array = [
+{
+  "poor": [
 	{
-		"title": "Добро пожаловать!",
-		"description": "Добро пожаловать в игру samogon.exe! Здесь вы будете управлять подпольным производством алкоголя. Давайте познакомимся с основными механиками.",
-		"highlight_node_path": "",
-		"highlight_expand": Vector2(0, 0)
+	  "id": "poor_uncle_vasya",
+	  "name": "Дядя Вася",
+	  "category": 0,
+	  "visual": "poor_client_1",
+	  "preferred_products": ["moonshine", "rice_spirit"],
+	  "required_quality": 0,
+	  "price_sensitivity": 1.5,
+	  "alternative_chance": 0.8,
+	  "discount_chance": 0.9,
+	  "visit": {
+		"type": "random",
+		"chance": 0.35
+	  }
 	},
 	{
-		"title": "Интерфейс",
-		"description": "Сверху вы видите панель с вашими деньгами, репутацией и текущим днем. Левая часть экрана - это магазин, правая - производство.",
-		"highlight_node_path": "MainUI/VSplitContainer/TopBar",
-		"highlight_expand": Vector2(20, 10)
+	  "id": "poor_tractor_driver",
+	  "name": "Тракторист Федя",
+	  "category": 0,
+	  "visual": "poor_client_2",
+	  "preferred_products": ["moonshine", "honey_tincture"],
+	  "required_quality": 0,
+	  "price_sensitivity": 1.6,
+	  "alternative_chance": 0.7,
+	  "discount_chance": 0.85,
+	  "visit": {
+		"type": "regular",
+		"days": [5, 6],
+		"time": "18:00"
+	  }
 	},
 	{
-		"title": "Производство",
-		"description": "В правой части экрана находится производство. Здесь вы будете создавать различные алкогольные напитки. Сначала вам доступно только самогоноварение.",
-		"highlight_node_path": "MainUI/VSplitContainer/ContentContainer/ProductionUI",
-		"highlight_expand": Vector2(20, 20)
+	  "id": "poor_granny",
+	  "name": "Бабушка Зина",
+	  "category": 0,
+	  "visual": "poor_client_3",
+	  "preferred_products": ["honey_tincture", "juniper_tincture"],
+	  "required_quality": 1,
+	  "price_sensitivity": 1.7,
+	  "alternative_chance": 0.5,
+	  "discount_chance": 0.95,
+	  "visit": {
+		"type": "random",
+		"chance": 0.2
+	  }
 	},
 	{
-		"title": "Ингредиенты",
-		"description": "Внизу экрана производства находятся ваши ингредиенты. Вы можете перетаскивать их на рабочую область или в инструменты для создания продуктов.",
-		"highlight_node_path": "MainUI/VSplitContainer/ContentContainer/ProductionUI/VBoxContainer/IngredientsPanel",
-		"highlight_expand": Vector2(20, 10)
+	  "id": "poor_student",
+	  "name": "Студент Сергей",
+	  "category": 0,
+	  "visual": "poor_client_4",
+	  "preferred_products": ["pale_lager", "wheat_beer"],
+	  "required_quality": 0,
+	  "price_sensitivity": 1.8,
+	  "alternative_chance": 0.9,
+	  "discount_chance": 0.9,
+	  "visit": {
+		"type": "random",
+		"chance": 0.4
+	  }
 	},
 	{
-		"title": "Инструменты",
-		"description": "Здесь находятся ваши инструменты для производства. Перетащите инструмент на рабочую область, а затем добавьте в него необходимые ингредиенты.",
-		"highlight_node_path": "MainUI/VSplitContainer/ContentContainer/ProductionUI/VBoxContainer/ToolsPanel",
-		"highlight_expand": Vector2(20, 10)
+	  "id": "poor_carpenter",
+	  "name": "Плотник Степаныч",
+	  "category": 0,
+	  "visual": "poor_client_5",
+	  "preferred_products": ["moonshine", "bourbon", "rye_whiskey"],
+	  "required_quality": 0,
+	  "price_sensitivity": 1.4,
+	  "alternative_chance": 0.65,
+	  "discount_chance": 0.8,
+	  "visit": {
+		"type": "regular",
+		"days": [2, 4],
+		"time": "17:30"
+	  }
 	},
 	{
-		"title": "Книга рецептов",
-		"description": "Нажмите на кнопку 'Книга рецептов', чтобы увидеть доступные вам рецепты. Новые рецепты открываются по мере улучшения производства.",
-		"highlight_node_path": "MainUI/VSplitContainer/ContentContainer/ProductionUI/VBoxContainer/ButtonPanel",
-		"highlight_expand": Vector2(20, 10)
+	  "id": "poor_janitor",
+	  "name": "Уборщица Галина",
+	  "category": 0,
+	  "visual": "poor_client_6",
+	  "preferred_products": ["fruit_beer", "white_wine"],
+	  "required_quality": 0,
+	  "price_sensitivity": 1.6,
+	  "alternative_chance": 0.7,
+	  "discount_chance": 0.85,
+	  "visit": {
+		"type": "random",
+		"chance": 0.25
+	  }
 	},
 	{
-		"title": "Магазин",
-		"description": "Левая часть экрана - это магазин, где к вам будут приходить клиенты. Здесь вы будете продавать созданные напитки.",
-		"highlight_node_path": "MainUI/VSplitContainer/ContentContainer/ShopUI",
-		"highlight_expand": Vector2(20, 20)
-	},
-	{
-		"title": "Клиенты",
-		"description": "В этой области появляются клиенты. Каждый клиент имеет свои предпочтения и платежеспособность. Вам нужно удовлетворять их запросы.",
-		"highlight_node_path": "MainUI/VSplitContainer/ContentContainer/ShopUI/VBoxContainer/ShopArea/VBoxContainer/CustomerArea",
-		"highlight_expand": Vector2(20, 20)
-	},
-	{
-		"title": "Склад",
-		"description": "Здесь хранятся ваши готовые напитки. Вы можете перетаскивать их отсюда клиентам для продажи. Также вы можете изменять цены на продукцию.",
-		"highlight_node_path": "MainUI/VSplitContainer/ContentContainer/ShopUI/VBoxContainer/ShopArea/VBoxContainer/StoragePanel",
-		"highlight_expand": Vector2(20, 10)
-	},
-	{
-		"title": "Начало игры",
-		"description": "Теперь вы знаете основы! Начните с создания простого самогона: перетащите бродильный чан на рабочую область, добавьте воду, сахар и кодзи, затем запустите процесс.",
-		"highlight_node_path": "",
-		"highlight_expand": Vector2(0, 0)
+	  "id": "poor_security",
+	  "name": "Охранник Николаич",
+	  "category": 0,
+	  "visual": "poor_client_7",
+	  "preferred_products": ["cinnamon_tincture", "coffee_tincture", "dark_lager"],
+	  "required_quality": 0,
+	  "price_sensitivity": 1.5,
+	  "alternative_chance": 0.7,
+	  "discount_chance": 0.8,
+	  "visit": {
+		"type": "regular",
+		"days": [1, 3, 5],
+		"time": "08:00"
+	  }
 	}
-]
-
-# Текущий шаг
-var current_step: int = 0
-var total_steps: int = 0
-
-func _ready() -> void:
-	# Подключение сигналов кнопок
-	next_button.connect("pressed", _on_next_button_pressed)
-	skip_button.connect("pressed", _on_skip_button_pressed)
-	
-	# Инициализация
-	total_steps = tutorial_steps.size()
-	update_tutorial_step()
-	
-	# Устанавливаем слой выше основного UI
-	layer = 10
-
-# Запуск туториала
-func start_tutorial() -> void:
-	current_step = 0
-	update_tutorial_step()
-	show()
-
-# Обновление шага туториала
-func update_tutorial_step() -> void:
-	if current_step >= total_steps:
-		# Туториал завершен
-		complete_tutorial()
-		return
-	
-	# Получаем данные текущего шага
-	var step = tutorial_steps[current_step]
-	
-	# Обновляем текст
-	title_label.text = step["title"]
-	description_label.text = step["description"]
-	
-	# Обновляем подсветку
-	update_highlight(step["highlight_node_path"], step["highlight_expand"])
-	
-	# Обновляем текст кнопки
-	if current_step == total_steps - 1:
-		next_button.text = "Завершить"
-	else:
-		next_button.text = "Далее"
-	
-	# Отправляем сигнал об изменении шага
-	emit_signal("tutorial_step_changed", current_step)
-
-# Обновление подсветки
-func update_highlight(node_path: String, expand: Vector2) -> void:
-	if node_path.is_empty():
-		# Если путь пустой, скрываем подсветку
-		highlight_rect.visible = false
-		return
-	
-	# Получаем узел для подсветки
-	var node = get_node_or_null("/root/MainScene/" + node_path)
-	if not node:
-		highlight_rect.visible = false
-		return
-	
-	# Получаем глобальные координаты и размеры узла
-	var rect = Rect2(node.global_position, node.size)
-	
-	# Расширяем прямоугольник
-	rect = rect.grow_individual(expand.x, expand.y, expand.x, expand.y)
-	
-	# Устанавливаем подсветку
-	highlight_rect.visible = true
-	highlight_rect.global_position = rect.position
-	highlight_rect.size = rect.size
-
-# Обработчики кнопок
-func _on_next_button_pressed() -> void:
-	# Воспроизводим звук нажатия
-	var audio_manager = $"/root/AudioManager"
-	if audio_manager:
-		audio_manager.play_sound("button_click", AudioManager.SoundType.UI)
-	
-	# Переходим к следующему шагу
-	current_step += 1
-	update_tutorial_step()
-
-func _on_skip_button_pressed() -> void:
-	# Воспроизводим звук нажатия
-	var audio_manager = $"/root/AudioManager"
-	if audio_manager:
-		audio_manager.play_sound("button_click", AudioManager.SoundType.UI)
-	
-	# Пропускаем туториал
-	complete_tutorial()
-
-# Завершение туториала
-func complete_tutorial() -> void:
-	# Отправляем сигнал о завершении
-	emit_signal("tutorial_completed")
-	
-	# Сохраняем, что туториал пройден
-	var game_manager = $"/root/GameManager"
-	game_manager.change_setting("tutorial_completed", true)
-	
-	# Скрываем туториал
-	hide()
+  ],
+  "middle": [
+	{
+	  "id": "middle_teacher",
+	  "name": "Учительница Мария Ивановна",
+	  "category": 1,
+	  "visual": "middle_client_1",
+	  "preferred_products": ["red_wine", "white_wine", "dessert_wine"],
+	  "required_quality": 1,
+	  "price_sensitivity": 1.0,
+	  "alternative_chance": 0.6,
+	  "discount_chance": 0.5,
+	  "visit": {
+		"type": "random",
+		"chance": 0.3
+	  }
+	},
+	{
+	  "id": "middle_mechanic",
+	  "name": "Автомеханик Петрович",
+	  "category": 1,
+	  "visual": "middle_client_2",
+	  "preferred_products": ["bourbon", "rye_whiskey", "malt_whiskey"],
+	  "required_quality": 1,
+	  "price_sensitivity": 1.1,
+	  "alternative_chance": 0.5,
+	  "discount_chance": 0.6,
+	  "visit": {
+		"type": "regular",
+		"days": [5, 6],
+		"time": "19:00"
+	  }
+	},
+	{
+	  "id": "middle_office_worker",
+	  "name": "Офисный Работник Антон",
+	  "category": 1,
+	  "visual": "middle_client_3",
+	  "preferred_products": ["ipa", "stout", "vanilla_tincture"],
+	  "required_quality": 1,
+	  "price_sensitivity": 0.9,
+	  "alternative_chance": 0.4,
+	  "discount_chance": 0.5,
+	  "visit": {
+		"type": "random",
+		"chance": 0.35
+	  }
+	},
+	{
+	  "id": "middle_nurse",
+	  "name": "Медсестра Елена",
+	  "category": 1,
+	  "visual": "middle_client_4",
+	  "preferred_products": ["sparkling_wine", "fruit_beer"],
+	  "required_quality": 1,
+	  "price_sensitivity": 1.0,
+	  "alternative_chance": 0.5,
+	  "discount_chance": 0.6,
+	  "visit": {
+		"type": "regular",
+		"days": [3, 7],
+		"time": "16:00"
+	  }
+	},
+	{
+	  "id": "middle_programmer",
+	  "name": "Программист Дмитрий",
+	  "category": 1,
+	  "visual": "middle_client_5",
+	  "preferred_products": ["wheat_beer", "ipa", "coffee_tincture"],
+	  "required_quality": 1,
+	  "price_sensitivity": 0.8,
+	  "alternative_chance": 0.4,
+	  "discount_chance": 0.4,
+	  "visit": {
+		"type": "random",
+		"chance": 0.3
+	  }
+	},
+	{
+	  "id": "middle_florist",
+	  "name": "Флорист Анжела",
+	  "category": 1,
+	  "visual": "middle_client_6",
+	  "preferred_products": ["red_wine", "brandy", "dessert_wine"],
+	  "required_quality": 2,
+	  "price_sensitivity": 1.0,
+	  "alternative_chance": 0.5,
+	  "discount_chance": 0.5,
+	  "visit": {
+		"type": "regular",
+		"days": [2, 4, 6],
+		"time": "12:00"
+	  }
+	},
+	{
+	  "id": "middle_taxi_driver",
+	  "name": "Таксист Рамиль",
+	  "category": 1,
+	  "visual": "middle_client_7",
+	  "preferred_products": ["calvados", "pineapple_spirit", "slivovitz"],
+	  "required_quality": 1,
+	  "price_sensitivity": 1.1,
+	  "alternative_chance": 0.6,
+	  "discount_chance": 0.7,
+	  "visit": {
+		"type": "random",
+		"chance": 0.25
+	  }
+	},
+	{
+	  "id": "middle_photographer",
+	  "name": "Фотограф Алиса",
+	  "category": 1,
+	  "visual": "middle_client_8",
+	  "preferred_products": ["blended_wine", "honey_tincture", "coffee_tincture"],
+	  "required_quality": 2,
+	  "price_sensitivity": 0.9,
+	  "alternative_chance": 0.5,
+	  "discount_chance": 0.5,
+	  "visit": {
+		"type": "regular",
+		"days": [1, 3, 5],
+		"time": "14:30"
+	  }
+	}
+  ],
+  "rich": [
+	{
+	  "id": "rich_businessman",
+	  "name": "Бизнесмен Олег",
+	  "category": 2,
+	  "visual": "rich_client_1",
+	  "preferred_products": ["aged_bourbon", "aged_brandy", "aged_red_wine"],
+	  "required_quality": 3,
+	  "price_sensitivity": 0.5,
+	  "alternative_chance": 0.3,
+	  "discount_chance": 0.2,
+	  "visit": {
+		"type": "random",
+		"chance": 0.15
+	  }
+	},
+	{
+	  "id": "rich_director",
+	  "name": "Директор Станислав Маркович",
+	  "category": 2,
+	  "visual": "rich_client_2",
+	  "preferred_products": ["malt_whiskey", "rye_whiskey", "blended_wine"],
+	  "required_quality": 2,
+	  "price_sensitivity": 0.6,
+	  "alternative_chance": 0.2,
+	  "discount_chance": 0.1,
+	  "visit": {
+		"type": "regular",
+		"days": [2, 5],
+		"time": "19:00"
+	  }
+	},
+	{
+	  "id": "rich_lady",
+	  "name": "Светская Дама Виктория",
+	  "category": 2,
+	  "visual": "rich_client_3",
+	  "preferred_products": ["sparkling_wine", "dessert_wine", "vanilla_tincture"],
+	  "required_quality": 3,
+	  "price_sensitivity": 0.4,
+	  "alternative_chance": 0.1,
+	  "discount_chance": 0.05,
+	  "visit": {
+		"type": "random",
+		"chance": 0.1
+	  }
+	},
+	{
+	  "id": "rich_lawyer",
+	  "name": "Адвокат Константин",
+	  "category": 2,
+	  "visual": "rich_client_4",
+	  "preferred_products": ["bourbon", "brandy", "juniper_tincture"],
+	  "required_quality": 2,
+	  "price_sensitivity": 0.5,
+	  "alternative_chance": 0.25,
+	  "discount_chance": 0.15,
+	  "visit": {
+		"type": "regular",
+		"days": [1, 4],
+		"time": "20:00"
+	  }
+	},
+	{
+	  "id": "rich_collector",
+	  "name": "Коллекционер Эдуард",
+	  "category": 2,
+	  "visual": "rich_client_5",
+	  "preferred_products": ["rice_spirit", "slivovitz", "pineapple_spirit"],
+	  "required_quality": 3,
+	  "price_sensitivity": 0.3,
+	  "alternative_chance": 0.4,
+	  "discount_chance": 0.1,
+	  "visit": {
+		"type": "random",
+		"chance": 0.12
+	  }
+	},
+	{
+	  "id": "rich_doctor",
+	  "name": "Главврач Софья Львовна",
+	  "category": 2,
+	  "visual": "rich_client_6",
+	  "preferred_products": ["aged_red_wine", "honey_tincture", "calvados"],
+	  "required_quality": 2,
+	  "price_sensitivity": 0.6,
+	  "alternative_chance": 0.3,
+	  "discount_chance": 0.2,
+	  "visit": {
+		"type": "regular",
+		"days": [3, 7],
+		"time": "18:30"
+	  }
+	},
+	{
+	  "id": "rich_celebrity",
+	  "name": "Местная Звезда Анастасия",
+	  "category": 2,
+	  "visual": "rich_client_7",
+	  "preferred_products": ["sparkling_wine", "fruit_beer", "cinnamon_tincture"],
+	  "required_quality": 3,
+	  "price_sensitivity": 0.4,
+	  "alternative_chance": 0.2,
+	  "discount_chance": 0.1,
+	  "visit": {
+		"type": "random",
+		"chance": 0.08
+	  }
+	},
+	{
+	  "id": "rich_politician",
+	  "name": "Политик Вячеслав Аркадьевич",
+	  "category": 2,
+	  "visual": "rich_client_8",
+	  "preferred_products": ["aged_bourbon", "aged_brandy", "malt_whiskey"],
+	  "required_quality": 3,
+	  "price_sensitivity": 0.3,
+	  "alternative_chance": 0.15,
+	  "discount_chance": 0.05,
+	  "visit": {
+		"type": "regular",
+		"days": [1, 5],
+		"time": "21:00"
+	  }
+	},
+	{
+	  "id": "rich_restaurant_owner",
+	  "name": "Ресторатор Михаил",
+	  "category": 2,
+	  "visual": "rich_client_9",
+	  "preferred_products": ["stout", "ipa", "aged_red_wine"],
+	  "required_quality": 3,
+	  "price_sensitivity": 0.7,
+	  "alternative_chance": 0.3,
+	  "discount_chance": 0.2,
+	  "visit": {
+		"type": "random",
+		"chance": 0.18
+	  }
+	}
+  ]
+}

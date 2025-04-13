@@ -19,7 +19,7 @@ static func from_dict(data: Dictionary) -> IngredientData:
 	ingredient.type = data.get("type", "")
 	ingredient.production_type = data.get("production_type", "")
 	ingredient.description = data.get("description", "")
-	ingredient.quality_prices = data.get("quality_prices", [0, 0, 0, 0])
+	#ingredient.quality_prices = data.get("quality_prices", [0, 0, 0, 0])
 	ingredient.sprite = data.get("sprite", "")
 	ingredient.category = data.get("category", "")
 	ingredient.count = data.get("starting_count", 0)

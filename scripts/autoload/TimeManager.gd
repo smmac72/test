@@ -33,12 +33,15 @@ var paused: bool = false
 var time_timer: Timer
 
 # Ссылки на другие системы
-@onready var game_manager: GameManager = $"/root/GameManager"
-@onready var event_manager: EventManager = $"/root/EventManager"
-@onready var audio_manager: AudioManager = $"/root/AudioManager"
+@onready var game_manager: GameManager = $"/root/GM"
+@onready var event_manager: EventManager = $"/root/EM"
+@onready var audio_manager: AudioManager = $"/root/AM"
+@onready var save_manager: SaveManager = $"/root/SM"
 
 # Инициализация
 func _ready() -> void:
+	if save_manager:
+		save_manager.register_system("time", self)
 	# Создаем таймер
 	time_timer = Timer.new()
 	add_child(time_timer)
@@ -265,3 +268,32 @@ func load_time_data(data: Dictionary) -> void:
 	
 	if "paused" in data:
 		paused = data["paused"]
+
+# Интерфейс для SaveManager - получение данных для сохранения
+func get_save_data() -> Dictionary:
+	return get_time_data()
+
+# Интерфейс для SaveManager - загрузка данных из сохранения
+func load_save_data(data: Dictionary) -> void:
+	if "game_time" in data:
+		game_time = data["game_time"]
+	
+	if "game_date" in data:
+		game_date = data["game_date"]
+	
+	if "time_of_day" in data:
+		time_of_day_name = data["time_of_day"]
+		# Обновляем enum на основе имени
+		match time_of_day_name:
+			"morning": current_time_of_day = TimeOfDay.MORNING
+			"day": current_time_of_day = TimeOfDay.DAY
+			"evening": current_time_of_day = TimeOfDay.EVENING
+			"night": current_time_of_day = TimeOfDay.NIGHT
+			
+	if "time_scale" in data:
+		time_scale = data["time_scale"]
+	
+	if "paused" in data:
+		paused = data["paused"]
+
+	print("TimeManager: Загрузка сохранения завершена")

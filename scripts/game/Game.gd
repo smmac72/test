@@ -14,13 +14,13 @@ extends Node
 @onready var day_label: Label = $MainUI/VSplitContainer/TopBar/HBoxContainer/DayContainer/DayLabel
 
 # Ссылки на менеджеры
-@onready var config_manager: ConfigManager = $"/root/ConfigManager"
-@onready var game_manager: GameManager = $"/root/GameManager"
-@onready var production_manager: ProductionManager = $"/root/ProductionManager"
-@onready var customer_manager: CustomerManager = $"/root/CustomerManager"
-@onready var time_manager: TimeManager = $"/root/TimeManager"
-@onready var event_manager: EventManager = $"/root/EventManager"
-@onready var audio_manager: AudioManager = $"/root/AudioManager"
+@onready var config_manager: ConfigManager = $"/root/ConfigM"
+@onready var game_manager: GameManager = $"/root/GM"
+@onready var production_manager: ProductionManager = $"/root/PM"
+@onready var customer_manager: CustomerManager = $"/root/CM"
+@onready var time_manager: TimeManager = $"/root/TM"
+@onready var event_manager: EventManager = $"/root/EM"
+@onready var audio_manager: AudioManager = $"/root/AM"
 
 # Переменные сцены
 var loading_completed: bool = false
@@ -30,7 +30,7 @@ var ui_layer: Control
 func _ready() -> void:
 	# Добавляем сцену в группу для доступа к UI слою
 	add_to_group("ui_layer")
-	ui_layer = self
+	ui_layer = main_ui
 	
 	# Показываем экран загрузки
 	loading_screen.show()
@@ -101,12 +101,21 @@ func initialize_systems() -> void:
 	update_ui_values()
 	
 	# Запускаем фоновую музыку, если ее еще нет
-	if audio_manager and not audio_manager.is_music_playing():
+	if audio_manager:
 		audio_manager.play_music("game_theme")
 		
 	# Воспроизводим звук окружения в зависимости от времени суток
 	if audio_manager:
 		audio_manager.play_ambient_for_time_of_day(time_manager.time_of_day_name)
+	
+	# Если это новая игра, сбрасываем все на начальные значения
+	if game_manager.is_new_game:
+		game_manager.reset_game()
+	else:
+		# Если это продолжение, загружаем сохранение
+		var save_manager = $"/root/SM"
+		if save_manager:
+			save_manager.load_game()
 
 # Завершение загрузки
 func complete_loading() -> void:
@@ -121,8 +130,9 @@ func complete_loading() -> void:
 	if game_manager.is_new_game and not tutorial_shown and not game_manager.settings.get("tutorial_completed", false):
 		show_tutorial()
 	
-	# Сохраняем игру после загрузки
-	game_manager.save_game()
+	var save_manager = $"/root/SM"
+	if save_manager:
+		save_manager.save_game()
 
 # Показ обучения
 func show_tutorial() -> void:
@@ -190,43 +200,39 @@ func _on_customer_arrived(customer_data: Dictionary) -> void:
 	# Обработка прибытия клиента
 	show_notification("Прибыл новый клиент!")
 
-func _on_customer_left(customer_id: String, satisfied: bool) -> void {
+func _on_customer_left(customer_id: String, satisfied: bool) -> void:
 	# Обработка ухода клиента
 	if satisfied:
 		show_notification("Клиент ушел довольный")
 	else:
 		show_notification("Клиент ушел недовольный")
-}
 
-func _on_recipe_completed(product_id: String, quality: int) -> void {
+func _on_recipe_completed(product_id: String, quality: int) -> void:
 	# Обработка завершения создания продукта
 	var product = production_manager.get_product(product_id)
 	if product:
 		show_notification("Создан: " + product.name + " (качество: " + str(quality) + ")")
-}
 
-func _on_product_count_changed(product_id: String, new_count: int, is_ingredient: bool) -> void {
+func _on_product_count_changed(product_id: String, new_count: int, is_ingredient: bool) -> void:
 	# Обработка изменения количества продукта/ингредиента
 	# Здесь можно добавить логику для обновления UI элементов
-}
+	return
 
-func _on_time_scale_changed(scale: float) -> void {
+func _on_time_scale_changed(scale: float) -> void:
 	# Обновляем скорость течения времени
 	time_manager.set_time_scale(scale)
-}
+	
 
-func _on_pause_toggled(is_paused: bool) -> void {
+func _on_pause_toggled(is_paused: bool) -> void:
 	# Обновляем статус паузы
 	time_manager.set_paused(is_paused)
-}
 
-func _on_game_over(reason: String) -> void {
+func _on_game_over(reason: String) -> void:
 	# Обработка окончания игры
 	time_manager.set_paused(true)
-}
 
 # Переключение режима производства
-func _on_production_mode_changed(mode: String) -> void {
+func _on_production_mode_changed(mode: String) -> void:
 	# Проверяем доступность режима
 	if game_manager.production_levels.get(mode, 0) <= 0:
 		# Режим недоступен, нужно его купить
@@ -242,7 +248,7 @@ func _on_production_mode_changed(mode: String) -> void {
 		audio_manager.play_sound("button_click", AudioManager.SoundType.UI)
 
 # Показ меню покупки улучшения
-func show_upgrade_menu(production_type: String) -> void {
+func show_upgrade_menu(production_type: String) -> void:
 	var upgrade_menu = preload("res://scenes/ui/UpgradeMenu.tscn").instantiate()
 	upgrade_menu.filter_by_type(production_type)
 	upgrade_menu.connect("upgrade_selected", _on_upgrade_selected)
@@ -250,7 +256,7 @@ func show_upgrade_menu(production_type: String) -> void {
 	upgrade_menu.popup_centered()
 
 # Обработчик выбора улучшения
-func _on_upgrade_selected(upgrade_id: String) -> void {
+func _on_upgrade_selected(upgrade_id: String) -> void:
 	# Поиск данных улучшения
 	var upgrade_data = null
 	var production_type = ""

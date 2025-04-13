@@ -34,8 +34,8 @@ func _ready() -> void:
 # Загрузка доступных улучшений
 func load_available_upgrades() -> void:
 	# Получаем менеджеры
-	var config_manager = $"/root/ConfigManager"
-	var game_manager = $"/root/GameManager"
+	var config_manager = $"/root/ConfigM"
+	var game_manager = $"/root/GM"
 	
 	# Загружаем текущие уровни производства
 	var production_levels = game_manager.production_levels

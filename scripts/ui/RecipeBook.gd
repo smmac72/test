@@ -24,7 +24,7 @@ func _ready() -> void:
 			button.connect("pressed", _on_category_button_pressed.bind(button.name.to_lower()))
 	
 	# Воспроизводим звук открытия
-	var audio_manager = $"/root/AudioManager"
+	var audio_manager = $"/root/AM"
 	if audio_manager:
 		audio_manager.play_sound("popup_open", AudioManager.SoundType.UI)
 

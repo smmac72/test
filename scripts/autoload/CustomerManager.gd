@@ -32,10 +32,10 @@ var reputation: float = 50.0  # 0-100
 var storage_products: Dictionary = {}  # product_id_quality -> {count, price_modifier}
 
 # Ссылки на другие системы
-@onready var config_manager: ConfigManager = $"/root/ConfigManager"
-@onready var game_manager: GameManager = $"/root/GameManager"
-@onready var production_manager: ProductionManager = $"/root/ProductionManager"
-@onready var save_manager: SaveManager = $"/root/SaveManager"
+@onready var config_manager: ConfigManager = $"/root/ConfigM"
+@onready var game_manager: GameManager = $"/root/GM"
+@onready var production_manager: ProductionManager = $"/root/PM"
+@onready var save_manager: SaveManager = $"/root/SM"
 
 # Инициализация
 func _ready() -> void:
@@ -49,8 +49,9 @@ func _ready() -> void:
 	customer_spawn_timer.connect("timeout", _on_spawn_timer_timeout)
 	
 	# Подключаем сигналы
-	game_manager.connect("day_changed", _on_day_changed)
-	game_manager.connect("time_of_day_changed", _on_time_of_day_changed)
+	if game_manager:
+		game_manager.connect("day_changed", _on_day_changed)
+		game_manager.connect("time_of_day_changed", _on_time_of_day_changed)
 	
 	# Загружаем конфигурации клиентов
 	_load_customer_templates()

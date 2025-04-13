@@ -21,6 +21,7 @@ func _ready() -> void:
 
 # Настройка диалога
 func setup(data: Dictionary) -> void:
+	return
 	event_data = data
 	
 	# Заполняем данные

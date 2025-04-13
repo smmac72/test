@@ -46,13 +46,13 @@ var settings: Dictionary = {
 }
 
 # Ссылки на другие системы
-@onready var config_manager: ConfigManager = $"/root/ConfigManager"
-@onready var time_manager: TimeManager = $"/root/TimeManager"
-@onready var production_manager: ProductionManager = $"/root/ProductionManager"
-@onready var customer_manager: CustomerManager = $"/root/CustomerManager"
-@onready var event_manager: EventManager = $"/root/EventManager"
-@onready var audio_manager: AudioManager = $"/root/AudioManager"
-@onready var save_manager: SaveManager = $"/root/SaveManager"
+@onready var config_manager: ConfigManager = $"/root/ConfigM"
+@onready var time_manager: TimeManager = $"/root/TM"
+@onready var production_manager: ProductionManager = $"/root/PM"
+@onready var customer_manager: CustomerManager = $"/root/CM"
+@onready var event_manager: EventManager = $"/root/EM"
+@onready var audio_manager: AudioManager = $"/root/AM"
+@onready var save_manager: SaveManager = $"/root/SM"
 
 # Инициализация
 func _ready() -> void:

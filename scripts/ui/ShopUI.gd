@@ -19,10 +19,10 @@ var available_products: Dictionary = {}  # id_quality -> {product, price_modifie
 var storage_slots: Array = []
 
 # Ссылки на менеджеры
-@onready var production_manager: ProductionManager = $"/root/ProductionManager"
-@onready var game_manager: GameManager = $"/root/GameManager"
-@onready var customer_manager: CustomerManager = $"/root/CustomerManager"
-@onready var audio_manager: AudioManager = $"/root/AudioManager"
+@onready var production_manager: ProductionManager = $"/root/PM"
+@onready var game_manager: GameManager = $"/root/GM"
+@onready var customer_manager: CustomerManager = $"/root/CM"
+@onready var audio_manager: AudioManager = $"/root/AM"
 
 # Инициализация
 func _ready() -> void:

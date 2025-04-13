@@ -4,7 +4,7 @@ extends Control
 # Секция производства (правое окно из дизайн-документа)
 
 # Узлы компонентов UI
-@onready var grid_container: GridContainer = $VBoxContainer/ProductionArea/Grid
+@onready var grid_container: GridContainer = $VBoxContainer/ProductionArea/VBoxContainer/Grid
 @onready var ingredients_bar: HBoxContainer = $VBoxContainer/IngredientsPanel/IngredientsBar
 @onready var tools_bar: HBoxContainer = $VBoxContainer/ToolsPanel/ToolsBar
 @onready var recipe_book_button: Button = $VBoxContainer/ButtonPanel/HBoxContainer/RecipeBookButton
@@ -17,15 +17,15 @@ extends Control
 var current_production_type: String = "samogon"
 
 # Ссылки на другие системы
-@onready var production_manager: ProductionManager = $"/root/ProductionManager"
-@onready var game_manager: GameManager = $"/root/GameManager"
-@onready var audio_manager: AudioManager = $"/root/AudioManager"
+@onready var production_manager: ProductionManager = $"/root/PM"
+@onready var game_manager: GameManager = $"/root/GM"
+@onready var audio_manager: AudioManager = $"/root/AM"
 
 # Инициализация интерфейса
 func _ready() -> void:
 	# Подключаем сигналы
-	recipe_book_button.connect("pressed", _on_recipe_book_button_pressed)
-	upgrade_button.connect("pressed", _on_upgrade_button_pressed)
+	#recipe_book_button.connect("pressed", _on_recipe_book_button_pressed)
+	#upgrade_button.connect("pressed", _on_upgrade_button_pressed)
 	
 	# Подключаем сигналы системы производства
 	production_manager.connect("recipe_completed", _on_recipe_completed)
@@ -118,9 +118,9 @@ func update_grid() -> void:
 
 # Обновление книги рецептов
 func update_recipe_book() -> void:
-	if recipe_book:
-		recipe_book.update_recipes(current_production_type, production_manager.learned_recipes)
-
+	#if recipe_book:
+		#recipe_book.update_recipes(current_production_type, production_manager.learned_recipes)
+	return
 # Обработчик нажатия на кнопку книги рецептов
 func _on_recipe_book_button_pressed() -> void:
 	# Показываем или скрываем книгу рецептов

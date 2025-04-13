@@ -10,8 +10,8 @@ extends Control
 @onready var settings_panel: Panel = $SettingsPanel
 
 # Ссылки на менеджеры
-@onready var game_manager: GameManager = $"/root/GameManager"
-@onready var audio_manager: AudioManager = $"/root/AudioManager"
+@onready var game_manager: GameManager = $"/root/GM"
+@onready var audio_manager: AudioManager = $"/root/AM"
 
 # Версия игры
 const VERSION: String = "0.1.0"

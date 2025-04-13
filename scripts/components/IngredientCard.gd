@@ -14,6 +14,7 @@ var ingredient_data: IngredientData
 @onready var name_label: Label = $CardContainer/NameLabel
 @onready var count_label: Label = $CardContainer/CountLabel
 @onready var quality_stars: Control = $CardContainer/QualityStars
+@onready var test: Label = $CardContainer/NameLabel
 
 # Состояние перетаскивания
 var dragging: bool = false
@@ -23,21 +24,22 @@ var start_position: Vector2 = Vector2.ZERO
 func _ready() -> void:
 	# Настраиваем обработчики событий
 	connect("gui_input", _on_gui_input)
+	# Устанавливаем визуальные элементы
+	update_visual()
 
 # Настройка карточки с данными ингредиента
 func setup(data: IngredientData) -> void:
 	ingredient_data = data
 	
-	# Устанавливаем визуальные элементы
-	update_visual()
 
 # Обновление визуального представления
 func update_visual() -> void:
-	if not ingredient_data:
+	if not ingredient_data or not ingredient_data.name:
 		return
 	
 	# Устанавливаем имя
-	name_label.text = ingredient_data.name
+	#name_label.text = ingredient_data.name
+	name_label.text = "test"
 	
 	# Устанавливаем количество
 	update_count(ingredient_data.count)

@@ -13,9 +13,9 @@ extends Panel
 @onready var radio_player = $RadioPlayer
 
 # Ссылки на другие системы
-@onready var game_manager: GameManager = $"/root/GameManager"
-@onready var customer_manager: CustomerManager = $"/root/CustomerManager"
-@onready var time_manager: TimeManager = $"/root/TimeManager"
+@onready var game_manager: GameManager = $"/root/GM"
+@onready var customer_manager: CustomerManager = $"/root/CM"
+@onready var time_manager: TimeManager = $"/root/TM"
 
 func _ready() -> void:
 	# Подключаем сигналы

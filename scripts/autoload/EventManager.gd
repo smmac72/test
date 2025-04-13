@@ -15,13 +15,17 @@ var daily_events: Array = []
 var scheduled_events: Dictionary = {}  # день -> массив событий
 
 # Ссылки на другие системы
-@onready var config_manager: ConfigManager = $"/root/ConfigManager"
-@onready var game_manager: GameManager = $"/root/GameManager"
-@onready var customer_manager: CustomerManager = $"/root/CustomerManager"
-@onready var time_manager: TimeManager = $"/root/TimeManager"
+@onready var config_manager: ConfigManager = $"/root/ConfigM"
+@onready var game_manager: GameManager = $"/root/GM"
+@onready var customer_manager: CustomerManager = $"/root/CM"
+@onready var time_manager: TimeManager = $"/root/TM"
+@onready var save_manager: SaveManager = $"/root/SM"
 
 # Инициализация
 func _ready() -> void:
+	return
+	if save_manager:
+		save_manager.register_system("event", self)
 	# Загружаем шаблоны событий
 	load_event_templates()
 	
@@ -369,3 +373,40 @@ func show_notification(text: String) -> void:
 	else:
 		# Если не найден UI слой, добавляем прямо в дерево
 		get_tree().current_scene.add_child(notification)
+# Интерфейс для SaveManager - получение данных для сохранения
+func get_save_data() -> Dictionary:
+	# Преобразуем структуры данных в формат, подходящий для сохранения
+	var serialized_active_events = {}
+	for event_id in active_events:
+		serialized_active_events[event_id] = active_events[event_id]
+	
+	var serialized_scheduled_events = {}
+	for day in scheduled_events:
+		serialized_scheduled_events[str(day)] = scheduled_events[day]
+		
+	return {
+		"active_events": serialized_active_events,
+		"scheduled_events": serialized_scheduled_events,
+		"daily_events": daily_events
+	}
+
+# Интерфейс для SaveManager - загрузка данных из сохранения
+func load_save_data(data: Dictionary) -> void:
+	# Загружаем активные события
+	if "active_events" in data:
+		active_events = data["active_events"]
+
+	# Загружаем запланированные события
+	
+	if "scheduled_events" in data:
+		var loaded_scheduled_events = data["scheduled_events"]
+		scheduled_events.clear()
+		
+		# Преобразуем строковые ключи обратно в целочисленные
+		for day_str in loaded_scheduled_events:
+			var day = int(day_str)
+			scheduled_events[day] = loaded_scheduled_events[day_str]
+	# Загружаем ежедневные события
+	if "daily_events" in data:
+		daily_events = data["daily_events"]
+	print("EventManager: Загрузка сохранения завершена")
