@@ -18,6 +18,9 @@ var processing_time: float = 0.0
 var result_product_id: String = ""
 var result_quality: int = 0
 
+var is_highlighting_valid_slots: bool = false
+var ingredient_highlight_timer: Timer
+
 # Компоненты UI
 @onready var progress_bar: ProgressBar = $ProgressBar
 @onready var timer: Timer = $Timer
@@ -46,24 +49,34 @@ func _ready() -> void:
 	
 	# Скрываем прогресс-бар
 	progress_bar.visible = false
+	
+	ingredient_highlight_timer = Timer.new()
+	ingredient_highlight_timer.wait_time = 0.5
+	ingredient_highlight_timer.one_shot = true
+	ingredient_highlight_timer.connect("timeout", _on_highlight_timer_timeout)
+	add_child(ingredient_highlight_timer)
 
 # Инициализация данных инструмента
 func initialize_tool_data() -> void:
 	if tool_id.is_empty():
-		push_error("ToolInstance: tool_id не указан")
+		push_error("ToolInstance: tool_id not specified")
 		return
 	
-	# Получаем данные инструмента
+	# Get tool data
 	tool_data = production_manager.get_tool(tool_id)
 	if not tool_data:
-		push_error("ToolInstance: инструмент с ID " + tool_id + " не найден")
+		push_error("ToolInstance: tool with ID " + tool_id + " not found")
 		return
 	
-	# Инициализируем слоты
+	# Initialize slots
 	initialize_slots()
 	
-	# Устанавливаем внешний вид
+	# Set visual appearance
 	update_visual()
+	
+	# Ensure the tool is visible and ready
+	modulate.a = 1.0
+	visible = true
 
 # Инициализация слотов инструмента
 func initialize_slots() -> void:
@@ -384,14 +397,69 @@ func _on_item_removed_from_slot(slot_id: String) -> void:
 
 # Метод для обработки внешнего сброса предмета на инструмент
 func handle_item_drop(item_data) -> bool:
-	# Перебираем все слоты и ищем подходящий
-	for slot_id in slots:
-		if can_accept_item(slot_id, item_data):
-			# Добавляем предмет в подходящий слот
-			return add_item_to_slot(slot_id, item_data)
+	# If we're processing, don't accept items
+	if is_processing:
+		return false
+	
+	# For ingredient drops
+	if item_data is IngredientData:
+		# Try to find a suitable slot
+		for slot_id in slots:
+			if can_accept_item(slot_id, item_data):
+				add_item_to_slot(slot_id, item_data)
+				
+				# Reduce ingredient count in inventory
+				item_data.count -= 1
+				production_manager.emit_signal("product_count_changed", item_data.id, item_data.count, true)
+				
+				# Check if all required slots are filled and can start processing
+				if can_start_processing():
+					# Add a short delay before auto-starting
+					var timer = Timer.new()
+					add_child(timer)
+					timer.wait_time = 0.5
+					timer.one_shot = true
+					timer.connect("timeout", _on_auto_start_timer_timeout)
+					timer.start()
+				
+				# Play sound
+				if audio_manager:
+					audio_manager.play_sound("item_place", AudioManager.SoundType.GAMEPLAY)
+				return true
+	
+	# For product drops (intermediate products used as ingredients)
+	elif item_data is ProductData and not item_data.is_final:
+		# Try to find a suitable slot
+		for slot_id in slots:
+			if can_accept_item(slot_id, item_data):
+				add_item_to_slot(slot_id, item_data)
+				
+				# Reduce product count in inventory
+				item_data.count -= 1
+				production_manager.emit_signal("product_count_changed", item_data.id, item_data.count, false)
+				
+				# Check if all required slots are filled and can start processing
+				if can_start_processing():
+					# Add a short delay before auto-starting
+					var timer = Timer.new()
+					add_child(timer)
+					timer.wait_time = 0.5
+					timer.one_shot = true
+					timer.connect("timeout", _on_auto_start_timer_timeout)
+					timer.start()
+				
+				# Play sound
+				if audio_manager:
+					audio_manager.play_sound("item_place", AudioManager.SoundType.GAMEPLAY)
+				
+				return true
 	
 	return false
-
+	
+func _on_auto_start_timer_timeout() -> void:
+	if can_start_processing():
+		start_processing()
+		
 # Получение информации для отображения в UI
 func get_info() -> Dictionary:
 	var result = {
@@ -424,3 +492,23 @@ func get_info() -> Dictionary:
 		}
 	
 	return result
+
+func highlight_valid_slots_for_item(item_data) -> void:
+	is_highlighting_valid_slots = true
+	
+	# Highlight all slots that can accept this item
+	for slot_id in slots:
+		var slot_node = get_slot_node(slot_id)
+		if slot_node and can_accept_item(slot_id, item_data):
+			slot_node.highlight_as_available()
+	
+	# Start a timer to remove the highlighting
+	ingredient_highlight_timer.start()
+
+func _on_highlight_timer_timeout() -> void:
+	# Remove highlighting from all slots
+	is_highlighting_valid_slots = false
+	for slot_id in slots:
+		var slot_node = get_slot_node(slot_id)
+		if slot_node:
+			slot_node.reset_highlighting()

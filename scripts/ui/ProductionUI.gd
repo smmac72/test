@@ -240,11 +240,39 @@ func _on_card_drag_started(card_node) -> void:
 		audio_manager.play_sound("item_pickup", AudioManager.SoundType.GAMEPLAY)
 
 func _on_card_drag_ended(card_node, drop_position: Vector2) -> void:
-	# Проверяем, находится ли позиция над допустимой целью
-	# Если нет, возвращаем карточку на место
-	card_node.return_to_original()
+	# Check if the card is dropped over a valid grid cell
+	var found_valid_cell = false
 	
-	# Воспроизводим звук окончания перетаскивания
+	# Iterate through all grid cells to find one under the drop position
+	for cell_node in grid_container.get_children():
+		if cell_node is GridCell:
+			# Convert drop_position to cell's local coordinates and check if it's within the cell
+			var local_pos = cell_node.get_global_transform().affine_inverse() * drop_position
+			var cell_rect = Rect2(Vector2.ZERO, cell_node.size)
+			
+			if cell_rect.has_point(local_pos):
+				# Found a cell, now check if it can accept this item
+				var item_data = null
+				
+				# Get the relevant data based on card type
+				if card_node is IngredientCard:
+					item_data = card_node.ingredient_data
+				elif card_node is ToolCard:
+					item_data = card_node.tool_data
+				elif card_node is ProductInstance:
+					item_data = card_node.product_data
+					
+				if cell_node.can_accept_item(item_data):
+					# Handle the drop directly
+					_on_item_dropped_to_cell(cell_node, item_data)
+					found_valid_cell = true
+					break
+					
+	# If no valid cell was found or the drop was rejected, return the card to its original position
+	if not found_valid_cell:
+		card_node.return_to_original()
+		
+	# Play sound for drop
 	if audio_manager:
 		audio_manager.play_sound("item_drop", AudioManager.SoundType.GAMEPLAY)
 
@@ -258,44 +286,35 @@ func _on_cell_unhighlighted(cell) -> void:
 	cell.remove_highlight()
 
 func _on_item_dropped_to_cell(cell, item_data) -> void:
-	# Логика размещения предмета в ячейку сетки
+	# Now handle different types of drops
 	if item_data is ToolData:
-		# Создаем экземпляр инструмента в ячейке
+		# Create tool instance and place it on the cell
 		var tool_instance = preload("res://scenes/production/ToolInstance.tscn").instantiate()
 		tool_instance.tool_id = item_data.id
-		tool_instance.position = cell.get_global_center()
+		tool_instance.initialize_tool_data()  # Make sure it initializes properly
+		tool_instance.global_position = cell.get_global_center()
 		add_child(tool_instance)
 		
-		# Обновляем состояние ячейки
-		cell.set_content(tool_instance)
-		
-		# Воспроизводим звук размещения
-		if audio_manager:
-			audio_manager.play_sound("item_place", AudioManager.SoundType.GAMEPLAY)
-	elif item_data is IngredientData:
-		# Проверяем, есть ли в ячейке инструмент
-		var cell_content = cell.content
-		if cell_content is ToolInstance:
-			# Пытаемся добавить ингредиент в инструмент
-			# Эта логика должна быть реализована в ToolInstance
-			pass
-		
-	elif item_data is ProductData:
-		# Размещаем продукт в ячейке (если это промежуточный продукт)
-		if not item_data.is_final:
-			var product_instance = preload("res://scenes/production/ProductInstance.tscn").instantiate()
-			product_instance.setup(item_data)
-			product_instance.position = cell.get_global_center()
-			add_child(product_instance)
-			
-			# Обновляем состояние ячейки
-			cell.set_content(product_instance)
-			
-			# Уменьшаем количество продукта в инвентаре
+		# Set the cell content
+		if cell.set_content(tool_instance):
+			# Play placement sound
+			if audio_manager:
+				audio_manager.play_sound("item_place", AudioManager.SoundType.GAMEPLAY)
+	
+	elif item_data is ProductData and not item_data.is_final:
+		# Place intermediate product on cell
+		var product_instance = preload("res://scenes/production/ProductInstance.tscn").instantiate()
+		product_instance.setup(item_data)
+		product_instance.global_position = cell.get_global_center()
+		add_child(product_instance)
+	   
+		 # Set the cell content
+		if cell.set_content(product_instance):
+			# Decrease product count
 			item_data.count -= 1
 			production_manager.emit_signal("product_count_changed", item_data.id, item_data.count, false)
 			
-			# Воспроизводим звук размещения
+			# Play placement sound
 			if audio_manager:
 				audio_manager.play_sound("item_place", AudioManager.SoundType.GAMEPLAY)
 

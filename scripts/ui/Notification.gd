@@ -22,6 +22,8 @@ func _ready() -> void:
 	
 	# Запускаем таймер
 	timer.start()
+	
+	
 
 # Настройка уведомления
 func setup(text: String, time: float = 3.0) -> void:

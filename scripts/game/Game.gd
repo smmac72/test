@@ -116,6 +116,8 @@ func initialize_systems() -> void:
 		var save_manager = $"/root/SM"
 		if save_manager:
 			save_manager.load_game()
+			
+	call_deferred("add_test_items_for_crafting")
 
 # Завершение загрузки
 func complete_loading() -> void:
@@ -288,9 +290,55 @@ func _on_upgrade_selected(upgrade_id: String) -> void:
 # Показ временного уведомления
 func show_notification(text: String) -> void:
 	var notification = preload("res://scenes/ui/Notification.tscn").instantiate()
-	notification.setup(text)
-	add_child(notification)
+	#notification.setup(text)
+	#add_child(notification)
 	
 	# Воспроизводим звук
 	if audio_manager:
 		audio_manager.play_sound("popup_open", AudioManager.SoundType.UI)
+
+func add_test_items_for_crafting() -> void:
+	# Add ingredients with count greater than 0 so we can use them immediately
+	var water = production_manager.get_ingredient("water")
+	if water:
+		water.count = 10
+		water.quality = 1
+		print("Added 10 water (quality 1)")
+	
+	var sugar = production_manager.get_ingredient("sugar")
+	if sugar:
+		sugar.count = 10
+		sugar.quality = 1
+		print("Added 10 sugar (quality 1)")
+	
+	var koji = production_manager.get_ingredient("koji")
+	if koji:
+		koji.count = 10
+		koji.quality = 1
+		print("Added 10 koji (quality 1)")
+	
+	# Make sure the basic tools are in the toolbar
+	var fermentation_barrel = production_manager.get_tool("fermentation")
+	if fermentation_barrel:
+		fermentation_barrel.quality = 1
+		print("Added fermentation barrel (quality 1)")
+	
+	var distiller = production_manager.get_tool("distiller")
+	if distiller:
+		distiller.quality = 1
+		print("Added distiller (quality 1)")
+	
+	# Force-learn some basic recipes if needed
+	if not "sugar_mash" in production_manager.learned_recipes:
+		production_manager.learned_recipes["sugar_mash"] = true
+		print("Learned sugar_mash recipe")
+	
+	if not "moonshine" in production_manager.learned_recipes:
+		production_manager.learned_recipes["moonshine"] = true
+		print("Learned moonshine recipe")
+	
+	# Refresh UI to show new items
+	production_ui.update_production_ui()
+	
+	# Show notification to indicate test items were added
+	show_notification("Test items added for crafting!")

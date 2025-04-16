@@ -60,33 +60,49 @@ func _on_mouse_exited() -> void:
 	if state != CellState.LOCKED:
 		emit_signal("cell_unhighlighted", self)
 
-func can_accept_item(item: Node2D) -> bool:
-	# Проверяем, можно ли поместить предмет в эту ячейку
+func can_accept_item(item) -> bool:
+	# Check if cell is already occupied or locked
 	if state == CellState.LOCKED or state == CellState.FILLED:
 		return false
-		
-	# Дополнительные проверки на совместимость
-	#if item is IngredientCard or item is ToolCard or item is ProductInstance:
-		#return true
-	return true
+	
+	# For data objects (from cards)
+	if item is IngredientData or item is ToolData or item is ProductData:
+		return state == CellState.EMPTY
+	
+	# For actual instances (already on the grid)
+	if item is Node2D:
+		# Prevent accepting items already placed somewhere else
+		if item.get_parent() != null and item != content:
+			# Check if it's a valid type to accept
+			if item is ToolInstance or (item is ProductInstance and not item.product_data.is_final):
+				return state == CellState.EMPTY
+	
+	return false
 
 func set_content(new_content: Node2D) -> bool:
 	if new_content == null:
-		# Очищаем ячейку
+		# Clearing the cell
 		content = null
 		state = CellState.EMPTY
 		return true
-		
+	 
 	if not can_accept_item(new_content):
 		return false
-		
-	# Устанавливаем содержимое
+	
+	# Properly set the content
 	content = new_content
 	state = CellState.FILLED
 	
-	# Перемещаем содержимое в позицию ячейки
-	content.global_position = global_position + cell_size/2
+	# Make sure the content is properly positioned
+	if content.has_method("set_position"):
+		content.set_position(cell_size / 2)
+	else:
+		# If it's not a Node2D with set_position, try to center it based on its global position
+		content.global_position = global_position + cell_size / 2
 	
+	# Make sure the content knows it belongs to this cell
+	if content.has_method("set_parent_cell"):
+		content.set_parent_cell(self)
 	return true
 
 func clear_content() -> Node2D:
@@ -112,3 +128,8 @@ func lock() -> void:
 
 func unlock() -> void:
 	state = CellState.EMPTY if content == null else CellState.FILLED
+	
+func handle_drop(item) -> bool:
+	if can_accept_item(item):
+		return set_content(item)
+	return false

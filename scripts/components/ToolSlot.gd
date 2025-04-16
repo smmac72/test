@@ -101,3 +101,11 @@ func handle_item_drop(item_data) -> bool:
 		
 		return true
 	return false
+
+func highlight_as_available() -> void:
+	# Change the visual appearance to show this slot can accept an item
+	modulate = Color(0.8, 1.0, 0.8)  # Light green glow
+
+func reset_highlighting() -> void:
+	# Reset to normal appearance
+	modulate = Color(1, 1, 1)  # Normal color
