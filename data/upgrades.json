@@ -1,0 +1,326 @@
+{
+  "samogon": [
+	{
+	  "id": "samogon_1",
+	  "name": "Базовое самогоноварение",
+	  "description": "Знакомство с основами производства самогона.",
+	  "production_type": "samogon",
+	  "level": 1,
+	  "cost": 0,
+	  "unlocks": {
+		"tools": ["fermentation", "distiller", "moonshine_machine"],
+		"ingredients": ["water", "sugar", "koji"],
+		"recipes": ["sugar_mash", "moonshine"]
+	  }
+	},
+	{
+	  "id": "samogon_2",
+	  "name": "Фруктовые дистилляты",
+	  "description": "Освоение фруктовых дистиллятов и расширение ассортимента.",
+	  "production_type": "samogon",
+	  "level": 2,
+	  "cost": 500,
+	  "unlocks": {
+		"ingredients": ["apple", "grape"],
+		"recipes": ["apple_mash", "grape_mash", "calvados", "brandy"]
+	  }
+	},
+	{
+	  "id": "samogon_3",
+	  "name": "Зерновые дистилляты",
+	  "description": "Технологии производства дистиллятов из зерновых культур.",
+	  "production_type": "samogon",
+	  "level": 3,
+	  "cost": 1200,
+	  "unlocks": {
+		"ingredients": ["corn", "rice", "barley", "rye"],
+		"recipes": ["corn_mash", "rice_mash", "barley_mash", "rye_mash", "bourbon", "rice_spirit", "malt_whiskey", "rye_whiskey"]
+	  }
+	},
+	{
+	  "id": "samogon_4",
+	  "name": "Профессиональная очистка",
+	  "description": "Технологии глубокой очистки и фракционной перегонки.",
+	  "production_type": "samogon",
+	  "level": 4,
+	  "cost": 2000,
+	  "unlocks": {
+		"tools": ["carbon_filter", "fractional_still"],
+		"recipes": ["pure_alcohol"]
+	  }
+	},
+	{
+	  "id": "samogon_5",
+	  "name": "Настойки и ликеры",
+	  "description": "Технологии производства ароматных настоек и ликеров.",
+	  "production_type": "samogon",
+	  "level": 5,
+	  "cost": 3000,
+	  "unlocks": {
+		"tools": ["tincture_maker"],
+		"ingredients": ["vanilla", "cinnamon", "juniper", "honey", "coffee"],
+		"recipes": ["vanilla_tincture", "cinnamon_tincture", "honey_tincture", "juniper_tincture", "coffee_tincture"]
+	  }
+	},
+	{
+	  "id": "samogon_6",
+	  "name": "Экзотические фрукты",
+	  "description": "Освоение экзотических фруктовых дистиллятов.",
+	  "production_type": "samogon",
+	  "level": 6,
+	  "cost": 4000,
+	  "unlocks": {
+		"ingredients": ["pineapple", "plum"],
+		"recipes": ["pineapple_mash", "plum_mash", "pineapple_spirit", "slivovitz"]
+	  }
+	},
+	{
+	  "id": "samogon_7",
+	  "name": "Выдержка и старение",
+	  "description": "Технологии выдержки напитков в дубовых бочках.",
+	  "production_type": "samogon",
+	  "level": 7,
+	  "cost": 5000,
+	  "unlocks": {
+		"tools": ["aging_barrel", "rectification_column"],
+		"ingredients": ["oak_chips"],
+		"recipes": ["aged_bourbon", "aged_brandy"]
+	  }
+	},
+	{
+	  "id": "samogon_8",
+	  "name": "Мастерство купажирования",
+	  "description": "Искусство создания авторских купажей и премиальных напитков.",
+	  "production_type": "samogon",
+	  "level": 8,
+	  "cost": 8000,
+	  "unlocks": {
+		"recipes": ["premium_blend", "master_reserve", "luxury_spirit"]
+	  }
+	}
+  ],
+  "beer": [
+	{
+	  "id": "beer_1",
+	  "name": "Базовое пивоварение",
+	  "description": "Знакомство с основами производства пива.",
+	  "production_type": "beer",
+	  "level": 1,
+	  "cost": 1000,
+	  "unlocks": {
+		"tools": ["mash_tun", "brewing_kettle", "beer_fermenter", "carbonation_system"],
+		"ingredients": ["wheat", "pale_malt", "hops", "beer_yeast"],
+		"recipes": ["pale_wort", "hopped_pale_wort", "young_pale_beer", "pale_lager"]
+	  }
+	},
+	{
+	  "id": "beer_2",
+	  "name": "Темные сорта пива",
+	  "description": "Технологии производства темных сортов пива.",
+	  "production_type": "beer",
+	  "level": 2,
+	  "cost": 2000,
+	  "unlocks": {
+		"ingredients": ["dark_malt", "caramel_malt"],
+		"recipes": ["dark_wort", "hopped_dark_wort", "young_dark_beer", "dark_lager"]
+	  }
+	},
+	{
+	  "id": "beer_3",
+	  "name": "Пшеничное пиво",
+	  "description": "Особенности производства пшеничного пива.",
+	  "production_type": "beer",
+	  "level": 3,
+	  "cost": 2500,
+	  "unlocks": {
+		"recipes": ["wheat_wort", "hopped_wheat_wort", "young_wheat_beer", "wheat_beer"]
+	  }
+	},
+	{
+	  "id": "beer_4",
+	  "name": "Расширенная палитра хмеля",
+	  "description": "Использование разных сортов хмеля и техники сухого охмеления.",
+	  "production_type": "beer",
+	  "level": 4,
+	  "cost": 3500,
+	  "unlocks": {
+		"tools": ["dry_hopping_tank"],
+		"ingredients": ["bitter_hops", "aroma_hops"],
+		"recipes": ["ipa"]
+	  }
+	},
+	{
+	  "id": "beer_5",
+	  "name": "Специальные сорта пива",
+	  "description": "Производство специальных сортов пива с добавками.",
+	  "production_type": "beer",
+	  "level": 5,
+	  "cost": 5000,
+	  "unlocks": {
+		"ingredients": ["chocolate_malt", "orange_peel", "coriander", "fruit_puree"],
+		"recipes": ["fruit_beer", "stout"]
+	  }
+	},
+	{
+	  "id": "beer_6",
+	  "name": "Комплексная пивоварня",
+	  "description": "Полноценное пивоваренное производство для создания сложных сортов.",
+	  "production_type": "beer",
+	  "level": 6,
+	  "cost": 8000,
+	  "unlocks": {
+		"tools": ["complete_brewery"],
+		"ingredients": ["smoked_malt"],
+		"recipes": ["smoked_beer", "imperial_stout", "barleywine"]
+	  }
+	}
+  ],
+  "wine": [
+	{
+	  "id": "wine_1",
+	  "name": "Базовое виноделие",
+	  "description": "Знакомство с основами производства вина.",
+	  "production_type": "wine",
+	  "level": 1,
+	  "cost": 1500,
+	  "unlocks": {
+		"tools": ["destemmer", "wine_press", "wine_fermenter", "wine_aging_barrel"],
+		"ingredients": ["red_grape", "white_grape", "wine_yeast"],
+		"recipes": ["destemmed_red_grape", "destemmed_white_grape", "red_grape_juice", "white_grape_juice", "young_red_wine", "young_white_wine", "red_wine", "white_wine"]
+	  }
+	},
+	{
+	  "id": "wine_2",
+	  "name": "Выдержка вина",
+	  "description": "Технологии выдержки и улучшения вкуса вина.",
+	  "production_type": "wine",
+	  "level": 2,
+	  "cost": 3000,
+	  "unlocks": {
+		"tools": ["batonnage_tank"],
+		"ingredients": ["oak_chips_wine", "tanin"],
+		"recipes": ["aged_red_wine"]
+	  }
+	},
+	{
+	  "id": "wine_3",
+	  "name": "Купажирование вин",
+	  "description": "Искусство создания купажей из разных сортов вина.",
+	  "production_type": "wine",
+	  "level": 3,
+	  "cost": 4500,
+	  "unlocks": {
+		"tools": ["blending_tank"],
+		"recipes": ["blended_wine"]
+	  }
+	},
+	{
+	  "id": "wine_4",
+	  "name": "Премиальные сорта винограда",
+	  "description": "Работа с благородными сортами винограда.",
+	  "production_type": "wine",
+	  "level": 4,
+	  "cost": 6000,
+	  "unlocks": {
+		"ingredients": ["cabernet", "merlot", "chardonnay", "riesling", "pinot_noir"],
+		"recipes": ["cabernet_wine", "merlot_wine", "chardonnay_wine", "riesling_wine", "pinot_wine"]
+	  }
+	},
+	{
+	  "id": "wine_5",
+	  "name": "Игристые вина",
+	  "description": "Технологии производства игристых вин.",
+	  "production_type": "wine",
+	  "level": 5,
+	  "cost": 7000,
+	  "unlocks": {
+		"tools": ["sparkling_wine_tank"],
+		"ingredients": ["champagne_yeast"],
+		"recipes": ["sparkling_wine"]
+	  }
+	},
+	{
+	  "id": "wine_6",
+	  "name": "Десертные и крепленые вина",
+	  "description": "Производство десертных и крепленых вин.",
+	  "production_type": "wine",
+	  "level": 6,
+	  "cost": 8000,
+	  "unlocks": {
+		"ingredients": ["bentonite"],
+		"recipes": ["dessert_wine", "port_wine", "sherry"]
+	  }
+	},
+	{
+	  "id": "wine_7",
+	  "name": "Плодовые вина",
+	  "description": "Технологии производства вин из ягод и фруктов.",
+	  "production_type": "wine",
+	  "level": 7,
+	  "cost": 9000,
+	  "unlocks": {
+		"ingredients": ["blueberry", "raspberry"],
+		"recipes": ["blueberry_wine", "raspberry_wine", "fruit_blend_wine"]
+	  }
+	},
+	{
+	  "id": "wine_8",
+	  "name": "Комплексная винодельня",
+	  "description": "Полноценное винодельческое производство для создания премиальных вин.",
+	  "production_type": "wine",
+	  "level": 8,
+	  "cost": 12000,
+	  "unlocks": {
+		"tools": ["complete_winery"],
+		"recipes": ["grand_reserve", "premium_blend", "collectors_edition"]
+	  }
+	}
+  ],
+  "garage": [
+	{
+	  "id": "garage_1",
+	  "name": "Базовая мастерская",
+	  "description": "Небольшое помещение для начинающего производства.",
+	  "production_type": "garage",
+	  "level": 1,
+	  "cost": 0,
+	  "grid_size": {"width": 6, "height": 3}
+	},
+	{
+	  "id": "garage_2",
+	  "name": "Расширенная мастерская",
+	  "description": "Увеличенное пространство для производства.",
+	  "production_type": "garage",
+	  "level": 2,
+	  "cost": 1000,
+	  "grid_size": {"width": 6, "height": 4}
+	},
+	{
+	  "id": "garage_3",
+	  "name": "Большая мастерская",
+	  "description": "Просторное помещение для разнообразного производства.",
+	  "production_type": "garage",
+	  "level": 3,
+	  "cost": 3000,
+	  "grid_size": {"width": 7, "height": 5}
+	},
+	{
+	  "id": "garage_4",
+	  "name": "Производственный цех",
+	  "description": "Полноценный цех с большой рабочей площадью.",
+	  "production_type": "garage",
+	  "level": 4,
+	  "cost": 6000,
+	  "grid_size": {"width": 8, "height": 6}
+	},
+	{
+	  "id": "garage_5",
+	  "name": "Мини-завод",
+	  "description": "Просторное помещение для масштабного производства.",
+	  "production_type": "garage",
+	  "level": 5,
+	  "cost": 10000,
+	  "grid_size": {"width": 9, "height": 7}
+	}
+  ]
+}

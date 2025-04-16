@@ -1,0 +1,25 @@
+[gd_scene load_steps=2 format=3 uid="uid://c3uq80d0g0uuv"]
+
+[ext_resource type="Script" uid="uid://dpktx607yg6re" path="res://scripts/RecipeBook.gd" id="1"]
+
+[node name="RecipeBook" type="Panel"]
+visible = false
+custom_minimum_size = Vector2(500, 400)
+anchors_preset = -1
+anchor_right = 0.8
+anchor_bottom = 0.8
+script = ExtResource("1")
+
+[node name="Close" type="Button" parent="."]
+layout_mode = 0
+anchor_left = 1.0
+anchor_right = 1.0
+text = "Закрыть"
+
+[node name="Scroll" type="ScrollContainer" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBox" type="VBoxContainer" parent="Scroll"]
+layout_mode = 2

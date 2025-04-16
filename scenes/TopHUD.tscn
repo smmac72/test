@@ -1,0 +1,57 @@
+[gd_scene format=3 uid="uid://uf8tpt72ej8u"]
+
+[node name="TopHUD" type="Panel"]
+self_modulate = Color(0.2, 0.2, 0.2, 1)
+custom_minimum_size = Vector2(0, 40)
+anchors_preset = 10
+anchor_right = 1.0
+
+[node name="HBox" type="HBoxContainer" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+alignment = 1
+
+[node name="LblMoney" type="Label" parent="HBox"]
+layout_mode = 2
+text = "₽ 1000"
+
+[node name="Spacer1" type="Control" parent="HBox"]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+
+[node name="LblDay" type="Label" parent="HBox"]
+layout_mode = 2
+text = "ДЕНЬ 0"
+
+[node name="Spacer2" type="Control" parent="HBox"]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+
+[node name="LblTime" type="Label" parent="HBox"]
+layout_mode = 2
+text = "08:00"
+
+[node name="Spacer3" type="Control" parent="HBox"]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+
+[node name="LblRep" type="Label" parent="HBox"]
+layout_mode = 2
+text = "REP 0"
+
+[node name="Menu" type="HBoxContainer" parent="HBox"]
+layout_mode = 2
+alignment = 2
+
+[node name="BtnRecipes" type="Button" parent="HBox/Menu"]
+layout_mode = 2
+text = "Рецепты"
+
+[node name="BtnUpgrades" type="Button" parent="HBox/Menu"]
+layout_mode = 2
+text = "Улучшения"
+
+[node name="BtnStats" type="Button" parent="HBox/Menu"]
+layout_mode = 2
+text = "Статистика"

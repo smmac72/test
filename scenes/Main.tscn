@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3 uid="uid://dkl57v44kmv03"]
+
+[ext_resource type="PackedScene" uid="uid://uf8tpt72ej8u" path="res://scenes/TopHUD.tscn" id="1"]
+[ext_resource type="PackedScene" uid="uid://c7jbfehk8dv33" path="res://scenes/ShopPanel.tscn" id="2"]
+[ext_resource type="PackedScene" uid="uid://bcvj1casdhw35" path="res://scenes/ProductionPanel.tscn" id="3"]
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+
+[node name="TopHUD" parent="." instance=ExtResource("1")]
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+
+[node name="HSplit" type="HSplitContainer" parent="."]
+layout_mode = 0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="ShopPanel" parent="HSplit" instance=ExtResource("2")]
+custom_minimum_size = Vector2(600, 0)
+layout_mode = 2
+
+[node name="ProductionPanel" parent="HSplit" instance=ExtResource("3")]
+layout_mode = 2
