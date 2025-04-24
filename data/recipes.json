@@ -405,7 +405,7 @@
 	  "ingredients": ["pure_alcohol", "coffee"],
 	  "sell_prices": [55, 65, 75, 90],
 	  "sprite": "coffee_tincture"
-	},
+	}, 
 	{
 	  "id": "aged_bourbon",
 	  "name": "Выдержанный бурбон",

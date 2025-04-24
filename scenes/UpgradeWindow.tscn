@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://c148p4fjy7822"]
+[gd_scene load_steps=3 format=3 uid="uid://c148p4fjy7822"]
 
 [ext_resource type="Script" uid="uid://07pcyglgctu" path="res://scripts/UpgradeWindow.gd" id="1"]
+[ext_resource type="AudioStream" uid="uid://c14048vv81sgt" path="res://Sound/upgrade.mp3" id="2_36chb"]
 
 [node name="UpgradeWindow" type="Panel"]
 visible = false
@@ -20,3 +21,6 @@ layout_mode = 0
 anchor_left = 1.0
 anchor_right = 1.0
 text = "X"
+
+[node name="Upgrade" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_36chb")

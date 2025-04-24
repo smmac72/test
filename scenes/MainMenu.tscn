@@ -1,0 +1,146 @@
+[gd_scene load_steps=14 format=3 uid="uid://dxetjb1m01wnn"]
+
+[ext_resource type="Script" uid="uid://tpifto1a3tik" path="res://scripts/main_menu.gd" id="1_yqorp"]
+[ext_resource type="PackedScene" uid="uid://4bau5mgcevqm" path="res://scenes/buttun_sounds.tscn" id="2_0ykhv"]
+[ext_resource type="Texture2D" uid="uid://c7dx5s8jng42h" path="res://art/knopka.png" id="2_bky6r"]
+[ext_resource type="Texture2D" uid="uid://cexryguspm8tm" path="res://art/mainmenu.png" id="3_l72w3"]
+[ext_resource type="Texture2D" uid="uid://cq0qma1w0m18d" path="res://art/logo_samogonexe.png" id="4_826wr"]
+[ext_resource type="Texture2D" uid="uid://dd556oibdjvt4" path="res://art/logo_314doorgames.png" id="5_ucygd"]
+[ext_resource type="Texture2D" uid="uid://dk15jg5fk0cxn" path="res://art/water.png" id="7_l4mxc"]
+[ext_resource type="Texture2D" uid="uid://dga4jjetsjps1" path="res://art/koji.png" id="8_5faoh"]
+[ext_resource type="Texture2D" uid="uid://c1052hvfn2lec" path="res://art/fermentation_barrel.png" id="9_l4mxc"]
+[ext_resource type="Texture2D" uid="uid://gtjendysj1m5" path="res://art/distiller.png" id="10_5faoh"]
+[ext_resource type="Texture2D" uid="uid://xhg1jjhb1cd6" path="res://art/raspberry.png" id="11_8vx4p"]
+[ext_resource type="Texture2D" uid="uid://buyreh0rosmdn" path="res://art/moonshine.png" id="12_tdapf"]
+[ext_resource type="AudioStream" uid="uid://c2vswu75w1eyf" path="res://Sound/Lunar Brew.mp3" id="13_l4mxc"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_yqorp")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+z_index = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.341176, 0.341176, 0.341176, 0)
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ColorRect"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -295.0
+offset_top = 258.0
+offset_right = 309.0
+offset_bottom = 358.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Button_continue" type="Button" parent="ColorRect/HBoxContainer"]
+visible = false
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "Продолжить"
+icon = ExtResource("2_bky6r")
+flat = true
+icon_alignment = 1
+expand_icon = true
+
+[node name="Button_start" type="Button" parent="ColorRect/HBoxContainer"]
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "Новая игра"
+icon = ExtResource("2_bky6r")
+flat = true
+icon_alignment = 1
+expand_icon = true
+
+[node name="Button_options" type="Button" parent="ColorRect/HBoxContainer"]
+visible = false
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "Настройки"
+icon = ExtResource("2_bky6r")
+flat = true
+icon_alignment = 1
+expand_icon = true
+
+[node name="Button_exit" type="Button" parent="ColorRect/HBoxContainer"]
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "Выйти"
+icon = ExtResource("2_bky6r")
+flat = true
+icon_alignment = 1
+expand_icon = true
+
+[node name="ButtunSounds" parent="ColorRect/HBoxContainer" instance=ExtResource("2_0ykhv")]
+root_path = NodePath("..")
+
+[node name="Mainmenu" type="Sprite2D" parent="."]
+modulate = Color(0.588235, 0.588235, 0.588235, 1)
+position = Vector2(961, 542)
+texture = ExtResource("3_l72w3")
+
+[node name="LogoSamogonexe" type="Sprite2D" parent="."]
+z_index = 5
+position = Vector2(966, 537)
+texture = ExtResource("4_826wr")
+
+[node name="Logo314Doorgames" type="Sprite2D" parent="."]
+position = Vector2(968, 712)
+texture = ExtResource("5_ucygd")
+
+[node name="Water" type="Sprite2D" parent="."]
+position = Vector2(883, 437)
+rotation = 0.0872665
+scale = Vector2(0.22, 0.22)
+texture = ExtResource("7_l4mxc")
+
+[node name="Koji" type="Sprite2D" parent="."]
+position = Vector2(610, 477)
+rotation = -0.296706
+scale = Vector2(0.22, 0.22)
+texture = ExtResource("8_5faoh")
+
+[node name="Sugar" type="Sprite2D" parent="."]
+position = Vector2(741, 442)
+scale = Vector2(0.22, 0.22)
+texture = ExtResource("9_l4mxc")
+
+[node name="Rice" type="Sprite2D" parent="."]
+position = Vector2(1042, 444)
+rotation = 0.0436332
+scale = Vector2(0.22, 0.22)
+texture = ExtResource("10_5faoh")
+
+[node name="Raspberry" type="Sprite2D" parent="."]
+position = Vector2(1150, 453)
+rotation = 0.0698132
+scale = Vector2(0.22, 0.22)
+texture = ExtResource("11_8vx4p")
+
+[node name="Moonshine" type="Sprite2D" parent="."]
+position = Vector2(1307, 459)
+rotation = 0.148353
+scale = Vector2(0.22, 0.22)
+texture = ExtResource("12_tdapf")
+
+[node name="LunarBrew" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("13_l4mxc")
+volume_db = -16.0

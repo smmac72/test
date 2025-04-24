@@ -1,0 +1,42 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="samogon.exe"
+run/main_scene="uid://dxetjb1m01wnn"
+config/features=PackedStringArray("4.4")
+config/icon="uid://cb2l72np2jydo"
+
+[autoload]
+
+GlobalState="*res://scripts/GlobalState.gd"
+TimeManager="*res://scripts/TimeManager.gd"
+DataService="*res://scripts/DataService.gd"
+CloudSave="*res://scripts/CloudSave.gd"
+UpgradeManager="*res://scripts/UpgradeManager.gd"
+ClientManager="*res://scripts/ClientManager.gd"
+OrderManager="*res://scripts/OrderManager.gd"
+EventManager="*res://scripts/EventManager.gd"
+PopupManager="*res://scripts/PopupManager.gd"
+RadioController="*res://scripts/RadioController.gd"
+GameManager="*res://scripts/GameManager.gd"
+RecipeManager="*res://scripts/RecipeManager.gd"
+
+[display]
+
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/stretch/mode="viewport"
+window/stretch/aspect="expand"
+
+[gd_project_settings]
+
+config_version=4

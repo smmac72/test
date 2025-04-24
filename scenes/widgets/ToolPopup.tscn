@@ -1,33 +1,143 @@
-[gd_scene load_steps=3 format=3 uid="uid://dxlkcri2l6axx"]
+[gd_scene load_steps=9 format=3 uid="uid://dxlkcri2l6axx"]
 
 [ext_resource type="Script" uid="uid://d3ew67gpty388" path="res://scripts/ToolPopup.gd" id="1"]
 [ext_resource type="Script" uid="uid://dh82b1oovpnjp" path="res://scripts/Slot.gd" id="2"]
+[ext_resource type="PackedScene" uid="uid://4bau5mgcevqm" path="res://scenes/buttun_sounds.tscn" id="3_nefdx"]
+[ext_resource type="AudioStream" uid="uid://bvc72l2clqcnk" path="res://Sound/instrument_card_closed.mp3" id="4_12uhq"]
+[ext_resource type="AudioStream" uid="uid://bhmem25w1jr0v" path="res://Sound/craft_bottle_success.mp3" id="5_br7qw"]
+[ext_resource type="AudioStream" uid="uid://cleg4dkonl3k1" path="res://Sound/craft_failed.mp3" id="6_1nxpb"]
+[ext_resource type="AudioStream" uid="uid://bcp0tvkkjf5sa" path="res://Sound/craft_success_between.mp3" id="7_m1yw3"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jrnbu"]
+bg_color = Color(0.2, 0.2, 0.2, 0.9)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.35, 0.25, 0, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+shadow_color = Color(0, 0, 0, 0.3)
+shadow_size = 4
+shadow_offset = Vector2(2, 2)
 
 [node name="ToolPopup" type="Panel"]
-custom_minimum_size = Vector2(260, 220)
+custom_minimum_size = Vector2(450, 375)
+offset_right = 300.0
+offset_bottom = 250.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_jrnbu")
 script = ExtResource("1")
 
-[node name="Grid" type="GridContainer" parent="."]
-layout_mode = 0
+[node name="Title" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = -1
 anchor_right = 1.0
-anchor_bottom = 0.75
+offset_bottom = 26.0
+grow_horizontal = 2
+text = "Название инструмента"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Description" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.1
+anchor_right = 1.0
+anchor_bottom = 0.18
+offset_left = 10.0
+offset_right = -10.0
+grow_horizontal = 2
+text = "Описание инструмента"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Grid" type="GridContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.2
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
 columns = 3
 
 [node name="SlotTemplate" type="Panel" parent="Grid"]
 visible = false
 self_modulate = Color(0.25, 0.25, 0.25, 1)
-custom_minimum_size = Vector2(48, 48)
+custom_minimum_size = Vector2(78, 128)
 layout_mode = 2
 script = ExtResource("2")
 
+[node name="Level" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.76
+anchor_right = 1.0
+anchor_bottom = 0.82
+offset_top = 4.75
+offset_bottom = 5.25
+grow_horizontal = 2
+grow_vertical = 2
+text = "Уровень: 0"
+horizontal_alignment = 1
+
 [node name="BtnStart" type="Button" parent="."]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = -1
 anchor_left = 0.5
-anchor_top = 0.8
+anchor_top = 0.85
 anchor_right = 0.5
-anchor_bottom = 0.8
+anchor_bottom = 0.85
+offset_left = -50.0
+offset_top = 6.5
+offset_right = 50.0
+offset_bottom = 37.5
+grow_horizontal = 2
+grow_vertical = 2
 text = "Старт"
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.92
+anchor_right = 0.9
+anchor_bottom = 0.98
+grow_horizontal = 2
+grow_vertical = 2
+max_value = 1.0
 
 [node name="Timer" type="Timer" parent="."]
 wait_time = 10.0
 one_shot = true
+
+[node name="CloseButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -25.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = 25.0
+grow_horizontal = 0
+text = "X"
+
+[node name="ButtunSounds" parent="." instance=ExtResource("3_nefdx")]
+root_path = NodePath("..")
+
+[node name="InstrumentCardClosed" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_12uhq")
+
+[node name="CraftBottleSuccess" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_br7qw")
+
+[node name="CraftFailed" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_1nxpb")
+
+[node name="CraftSuccessBetween" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_m1yw3")

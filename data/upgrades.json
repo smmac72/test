@@ -8,7 +8,7 @@
 	  "level": 1,
 	  "cost": 0,
 	  "unlocks": {
-		"tools": ["fermentation", "distiller", "moonshine_machine"],
+		"tools": ["fermentation", "distiller"],
 		"ingredients": ["water", "sugar", "koji"],
 		"recipes": ["sugar_mash", "moonshine"]
 	  }
@@ -108,9 +108,6 @@
 	  "level": 1,
 	  "cost": 1000,
 	  "unlocks": {
-		"tools": ["mash_tun", "brewing_kettle", "beer_fermenter", "carbonation_system"],
-		"ingredients": ["wheat", "pale_malt", "hops", "beer_yeast"],
-		"recipes": ["pale_wort", "hopped_pale_wort", "young_pale_beer", "pale_lager"]
 	  }
 	},
 	{
@@ -121,6 +118,7 @@
 	  "level": 2,
 	  "cost": 2000,
 	  "unlocks": {
+		"tools": ["mash_tun", "brewing_kettle", "beer_fermenter", "carbonation_system"],
 		"ingredients": ["dark_malt", "caramel_malt"],
 		"recipes": ["dark_wort", "hopped_dark_wort", "young_dark_beer", "dark_lager"]
 	  }
@@ -184,9 +182,7 @@
 	  "level": 1,
 	  "cost": 1500,
 	  "unlocks": {
-		"tools": ["destemmer", "wine_press", "wine_fermenter", "wine_aging_barrel"],
-		"ingredients": ["red_grape", "white_grape", "wine_yeast"],
-		"recipes": ["destemmed_red_grape", "destemmed_white_grape", "red_grape_juice", "white_grape_juice", "young_red_wine", "young_white_wine", "red_wine", "white_wine"]
+		
 	  }
 	},
 	{

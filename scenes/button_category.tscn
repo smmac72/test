@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://b0fx2538ow7cl"]
+
+[ext_resource type="Script" uid="uid://da5fthbb64yif" path="res://scripts/button_category.gd" id="1_fhsk8"]
+
+[node name="ButtonCategory" type="Node"]
+script = ExtResource("1_fhsk8")

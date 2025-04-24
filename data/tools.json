@@ -7,8 +7,8 @@
 	  "production_type": "samogon",
 	  "slots": [
 		{"id": "slot1", "type": "base", "required": true, "display_name": "Вода"},
-		{"id": "slot2", "type": "mash_ingredient", "required": true, "display_name": "Ингредиент для браги"},
-		{"id": "slot3", "type": "fermentation", "required": true, "display_name": "Дрожжи/Фермент"}
+		{"id": "slot2", "type": "mash_ingredient", "required": true, "display_name": "Продукт"},
+		{"id": "slot3", "type": "fermentation", "required": true, "display_name": "Дрожжи"}
 	  ],
 	  "processing_time": 10,
 	  "quality_weights": {"base": 30, "mash_ingredient": 20, "fermentation": 20, "tool": 30},
@@ -34,7 +34,7 @@
 	  "description": "Специальный аппарат для производства самогона из сахарной браги.",
 	  "production_type": "samogon",
 	  "slots": [
-		{"id": "slot1", "type": "mash", "required": true, "display_name": "Сахарная брага"}
+		{"id": "slot1", "type": "mash", "required": true, "display_name": "Брага"}
 	  ],
 	  "processing_time": 30,
 	  "quality_weights": {"mash": 60, "tool": 40},
@@ -101,7 +101,7 @@
 	  "production_type": "samogon",
 	  "slots": [
 		{"id": "slot1", "type": "base_alcohol", "required": true, "display_name": "Дистиллят"},
-		{"id": "slot2", "type": "aging", "required": false, "display_name": "Добавка для выдержки"}
+		{"id": "slot2", "type": "aging", "required": false, "display_name": "Добавка"}
 	  ],
 	  "processing_time": 60,
 	  "quality_weights": {"base_alcohol": 70, "aging": 20, "tool": 10},
@@ -131,7 +131,7 @@
 	  "production_type": "beer",
 	  "slots": [
 		{"id": "slot1", "type": "wort", "required": true, "display_name": "Сусло"},
-		{"id": "slot2", "type": "beer_additive", "required": true, "display_name": "Хмель/Добавка"}
+		{"id": "slot2", "type": "beer_additive", "required": true, "display_name": "Добавка"}
 	  ],
 	  "processing_time": 20,
 	  "quality_weights": {"wort": 50, "beer_additive": 40, "tool": 10},

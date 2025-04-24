@@ -1,0 +1,247 @@
+[gd_scene load_steps=7 format=3 uid="uid://dkl57v44kmv03"]
+
+[ext_resource type="PackedScene" uid="uid://uf8tpt72ej8u" path="res://scenes/TopHUD.tscn" id="1"]
+[ext_resource type="PackedScene" uid="uid://c7jbfehk8dv33" path="res://scenes/ShopPanel.tscn" id="2"]
+[ext_resource type="PackedScene" uid="uid://bcvj1casdhw35" path="res://scenes/ProductionPanel.tscn" id="3"]
+[ext_resource type="PackedScene" uid="uid://c3uq80d0g0uuv" path="res://scenes/RecipeBook.tscn" id="4"]
+[ext_resource type="PackedScene" uid="uid://c148p4fjy7822" path="res://scenes/UpgradeWindow.tscn" id="5"]
+[ext_resource type="Script" uid="uid://bguad6st3xkl0" path="res://scripts/MainScene.gd" id="6"]
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("6")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.14902, 0.14902, 0.14902, 1)
+
+[node name="TopHUD" parent="." instance=ExtResource("1")]
+layout_mode = 1
+offset_bottom = 0.0
+
+[node name="HSplit" type="HSplitContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.05
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+split_offset = 200
+
+[node name="ShopPanel" parent="HSplit" instance=ExtResource("2")]
+custom_minimum_size = Vector2(600, 0)
+layout_mode = 2
+
+[node name="ProductionPanel" parent="HSplit" instance=ExtResource("3")]
+layout_mode = 2
+
+[node name="RecipeBook" parent="." instance=ExtResource("4")]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -200.0
+offset_right = 250.0
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="UpgradeWindow" parent="." instance=ExtResource("5")]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -150.0
+offset_right = 200.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PauseMenu" type="Panel" parent="."]
+process_mode = 2
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -125.0
+offset_right = 150.0
+offset_bottom = 125.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="PauseMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="PauseMenu/VBox"]
+layout_mode = 2
+text = "ПАУЗА"
+horizontal_alignment = 1
+
+[node name="Separator" type="HSeparator" parent="PauseMenu/VBox"]
+layout_mode = 2
+
+[node name="BtnResume" type="Button" parent="PauseMenu/VBox"]
+custom_minimum_size = Vector2(100, 40)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Продолжить"
+
+[node name="BtnSave" type="Button" parent="PauseMenu/VBox"]
+custom_minimum_size = Vector2(100, 40)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Сохранить"
+
+[node name="BtnLoad" type="Button" parent="PauseMenu/VBox"]
+custom_minimum_size = Vector2(100, 40)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Загрузить"
+
+[node name="BtnSettings" type="Button" parent="PauseMenu/VBox"]
+custom_minimum_size = Vector2(100, 40)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Настройки"
+
+[node name="BtnQuit" type="Button" parent="PauseMenu/VBox"]
+custom_minimum_size = Vector2(100, 40)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Выйти в меню"
+
+[node name="GameOverScreen" type="Panel" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="GameOverScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -150.0
+offset_right = 250.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="LabelGameOver" type="Label" parent="GameOverScreen/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "ИГРА ОКОНЧЕНА"
+horizontal_alignment = 1
+
+[node name="LabelReason" type="Label" parent="GameOverScreen/VBox"]
+layout_mode = 2
+text = "Вы обанкротились!"
+horizontal_alignment = 1
+
+[node name="Separator" type="HSeparator" parent="GameOverScreen/VBox"]
+layout_mode = 2
+
+[node name="LabelStats" type="Label" parent="GameOverScreen/VBox"]
+layout_mode = 2
+text = "Ваша статистика:"
+horizontal_alignment = 1
+
+[node name="StatsContainer" type="VBoxContainer" parent="GameOverScreen/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BtnRestart" type="Button" parent="GameOverScreen/VBox"]
+custom_minimum_size = Vector2(150, 40)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Начать заново"
+
+[node name="BtnQuit" type="Button" parent="GameOverScreen/VBox"]
+custom_minimum_size = Vector2(150, 40)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Выйти в меню"
+
+[node name="StatisticsScreen" type="Panel" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -200.0
+offset_right = 300.0
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="StatisticsScreen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="StatisticsScreen/VBox"]
+layout_mode = 2
+text = "СТАТИСТИКА"
+horizontal_alignment = 1
+
+[node name="Separator" type="HSeparator" parent="StatisticsScreen/VBox"]
+layout_mode = 2
+
+[node name="Scroll" type="ScrollContainer" parent="StatisticsScreen/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="StatsContainer" type="VBoxContainer" parent="StatisticsScreen/VBox/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="BtnClose" type="Button" parent="StatisticsScreen"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 31.0
+grow_horizontal = 0
+text = "X"
